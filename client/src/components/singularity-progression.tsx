@@ -50,25 +50,35 @@ export default function SingularityProgression() {
             datasets: [{
               label: 'Singularity Progress (%)',
               data: singularityProgress,
-              borderColor: '#F093FB',
-              backgroundColor: 'rgba(240, 147, 251, 0.1)',
-              borderWidth: 4,
+              borderColor: '#667EEA',
+              backgroundColor: 'rgba(102, 126, 234, 0.1)',
+              borderWidth: 3,
               tension: 0.4,
-              pointBackgroundColor: '#F093FB',
-              pointBorderColor: '#FFFFFF',
-              pointBorderWidth: 3,
-              pointRadius: 6,
-              pointHoverRadius: 8,
-              fill: true,
-              // Add gradient effect
-              segment: {
-                borderColor: (ctx) => {
-                  const progress = ctx.p1.parsed.y;
-                  if (progress >= 100) return '#10B981'; // Green for post-singularity
-                  if (progress >= 90) return '#F093FB'; // Pink for near-singularity
-                  return '#667EEA'; // Purple for current progress
-                }
-              }
+              pointBackgroundColor: years.map((year, index) => {
+                if (year === '2032') return '#10B981'; // Bright green for singularity
+                if (year === currentYear.toString()) return '#F093FB'; // Bright pink for current year
+                return '#667EEA'; // Default purple
+              }),
+              pointBorderColor: years.map((year, index) => {
+                if (year === '2032') return '#FFFFFF'; // White border for singularity
+                if (year === currentYear.toString()) return '#FFFFFF'; // White border for current year
+                return '#667EEA'; // Default border
+              }),
+              pointBorderWidth: years.map((year, index) => {
+                if (year === '2032' || year === currentYear.toString()) return 4; // Thicker border for key points
+                return 2; // Default border
+              }),
+              pointRadius: years.map((year, index) => {
+                if (year === '2032') return 12; // Largest for singularity
+                if (year === currentYear.toString()) return 10; // Large for current year
+                return 5; // Default size
+              }),
+              pointHoverRadius: years.map((year, index) => {
+                if (year === '2032') return 15; // Largest hover for singularity
+                if (year === currentYear.toString()) return 12; // Large hover for current year
+                return 8; // Default hover
+              }),
+              fill: true
             }]
           },
           options: {
@@ -88,23 +98,39 @@ export default function SingularityProgression() {
                 }
               },
               tooltip: {
-                backgroundColor: 'rgba(15, 15, 35, 0.9)',
+                backgroundColor: 'rgba(15, 15, 35, 0.95)',
                 titleColor: '#E5E7EB',
                 bodyColor: '#E5E7EB',
                 borderColor: '#667EEA',
-                borderWidth: 1,
+                borderWidth: 2,
+                cornerRadius: 8,
+                displayColors: false,
                 callbacks: {
+                  title: function(context) {
+                    const year = context[0].label;
+                    if (year === '2032') return '🎯 SINGULARITY YEAR';
+                    if (year === currentYear.toString()) return '📍 CURRENT YEAR';
+                    return `Year ${year}`;
+                  },
                   label: function(context) {
                     const year = parseInt(context.label);
                     const progress = context.parsed.y;
                     
                     if (year === 2032 && progress >= 100) {
-                      return `Singularity Achieved: ${progress}%`;
-                    } else if (year <= new Date().getFullYear()) {
-                      return `Current Progress: ${progress}%`;
+                      return [`AI Surpasses Human Intelligence`, `Progress: ${progress}%`, `Technological Singularity Achieved!`];
+                    } else if (year === currentYear) {
+                      return [`Current AI Development Level`, `Progress: ${progress}%`, `${100 - progress}% remaining to singularity`];
+                    } else if (year > currentYear) {
+                      return [`Projected AI Progress`, `Estimated: ${progress}%`];
                     } else {
-                      return `Projected Progress: ${progress}%`;
+                      return [`Historical Progress`, `Achieved: ${progress}%`];
                     }
+                  },
+                  labelColor: function(context) {
+                    const year = context.label;
+                    if (year === '2032') return { borderColor: '#10B981', backgroundColor: '#10B981' };
+                    if (year === currentYear.toString()) return { borderColor: '#F093FB', backgroundColor: '#F093FB' };
+                    return { borderColor: '#667EEA', backgroundColor: '#667EEA' };
                   }
                 }
               }
@@ -183,19 +209,35 @@ export default function SingularityProgression() {
           <canvas ref={chartRef}></canvas>
         </div>
         
+        {/* Legend */}
+        <div className="flex flex-wrap justify-center gap-6 mb-4">
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: '#F093FB' }}></div>
+            <span className="text-sm text-light-grey font-inter">Current Year ({new Date().getFullYear()})</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: '#10B981' }}></div>
+            <span className="text-sm text-light-grey font-inter">Singularity Point (2032)</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 rounded-full border border-tech-purple" style={{ backgroundColor: '#667EEA' }}></div>
+            <span className="text-sm text-light-grey font-inter">Other Years</span>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-          <div className="bg-gradient-to-br from-tech-purple/20 to-deep-purple/20 rounded-lg p-3 border border-tech-purple/30">
-            <div className="text-lg font-jetbrains font-bold text-tech-purple">
+          <div className="bg-gradient-to-br from-bright-pink/20 to-deep-purple/20 rounded-lg p-3 border border-bright-pink/30">
+            <div className="text-lg font-jetbrains font-bold text-bright-pink">
               {new Date().getFullYear()}
             </div>
             <div className="text-xs text-light-grey/60 uppercase tracking-wide">Current Year</div>
           </div>
-          <div className="bg-gradient-to-br from-bright-pink/20 to-deep-purple/20 rounded-lg p-3 border border-bright-pink/30">
-            <div className="text-lg font-jetbrains font-bold text-bright-pink">2032</div>
+          <div className="bg-gradient-to-br from-neon-green/20 to-deep-purple/20 rounded-lg p-3 border border-neon-green/30">
+            <div className="text-lg font-jetbrains font-bold text-neon-green">2032</div>
             <div className="text-xs text-light-grey/60 uppercase tracking-wide">Predicted Singularity</div>
           </div>
-          <div className="bg-gradient-to-br from-neon-green/20 to-deep-purple/20 rounded-lg p-3 border border-neon-green/30">
-            <div className="text-lg font-jetbrains font-bold text-neon-green">100%</div>
+          <div className="bg-gradient-to-br from-tech-purple/20 to-deep-purple/20 rounded-lg p-3 border border-tech-purple/30">
+            <div className="text-lg font-jetbrains font-bold text-tech-purple">100%</div>
             <div className="text-xs text-light-grey/60 uppercase tracking-wide">Target Progress</div>
           </div>
         </div>
