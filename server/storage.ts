@@ -20,6 +20,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createNewsArticle(insertArticle: InsertNewsArticle): Promise<NewsArticle> {
+    // Check if article with same title or URL already exists
+    const existing = await db
+      .select()
+      .from(newsArticles)
+      .where(eq(newsArticles.title, insertArticle.title))
+      .limit(1);
+
+    if (existing.length > 0) {
+      return existing[0]; // Return existing article instead of creating duplicate
+    }
+
     const [article] = await db
       .insert(newsArticles)
       .values(insertArticle)

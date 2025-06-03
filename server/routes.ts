@@ -38,6 +38,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Process and store articles
       const processedArticles = [];
+      const skippedDuplicates = [];
+      
       for (const article of articles.slice(0, 10)) {
         if (article.title && article.description && article.source?.name) {
           const newsArticle = {
@@ -54,12 +56,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const validation = insertNewsArticleSchema.safeParse(newsArticle);
           if (validation.success) {
             const stored = await storage.createNewsArticle(validation.data);
-            processedArticles.push(stored);
+            
+            // Check if this was a new article or existing one
+            const isNew = stored.createdAt && new Date(stored.createdAt).getTime() > Date.now() - 5000; // Created within last 5 seconds
+            
+            if (isNew) {
+              processedArticles.push(stored);
+            } else {
+              skippedDuplicates.push(article.title);
+            }
           }
         }
       }
 
-      res.json({ message: `Fetched and stored ${processedArticles.length} articles`, articles: processedArticles });
+      const message = processedArticles.length > 0 
+        ? `Fetched and stored ${processedArticles.length} new articles` 
+        : "No new articles found (all were duplicates)";
+      
+      res.json({ 
+        message, 
+        newArticles: processedArticles.length,
+        duplicatesSkipped: skippedDuplicates.length,
+        articles: processedArticles 
+      });
     } catch (error) {
       console.error("Error fetching news:", error);
       res.status(500).json({ message: "Failed to fetch external news" });
