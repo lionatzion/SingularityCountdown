@@ -15,16 +15,15 @@ export default function SingularityProgression() {
 
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
-        // Generate progression data points from 2020 to 2035
-        const years = [];
-        const singularityProgress = [];
+        // Generate progression data points from 2020 to 2040
+        const years: string[] = [];
+        const singularityProgress: number[] = [];
         const currentYear = new Date().getFullYear();
         
-        for (let year = 2020; year <= 2035; year++) {
+        for (let year = 2020; year <= 2040; year++) {
           years.push(year.toString());
           
-          // Calculate exponential progression towards singularity
-          // Using a sigmoid-like curve that accelerates and approaches 100% by 2032
+          // Calculate exponential progression towards and beyond singularity
           const yearsSince2020 = year - 2020;
           let progress;
           
@@ -32,12 +31,16 @@ export default function SingularityProgression() {
             // Historical/current data with exponential growth
             progress = Math.min(95, 8 * Math.pow(1.4, yearsSince2020));
           } else if (year <= 2032) {
-            // Projected rapid acceleration
+            // Projected rapid acceleration to singularity
             const yearsTo2032 = 2032 - year;
             progress = 100 - (yearsTo2032 * yearsTo2032 * 2); // Quadratic approach to 100%
           } else {
-            // Post-singularity plateau
-            progress = 100;
+            // Post-singularity exponential explosion
+            const yearsPastSingularity = year - 2032;
+            // Exponential growth beyond human comprehension levels
+            progress = 100 * Math.pow(2, yearsPastSingularity * 1.5); // Doubling every ~0.67 years
+            // Cap at reasonable chart limits for visualization
+            progress = Math.min(progress, 10000);
           }
           
           singularityProgress.push(Math.round(progress * 10) / 10);
@@ -55,29 +58,40 @@ export default function SingularityProgression() {
               borderWidth: 3,
               tension: 0.4,
               pointBackgroundColor: years.map((year, index) => {
+                const yearNum = parseInt(year);
                 if (year === '2032') return '#10B981'; // Bright green for singularity
                 if (year === currentYear.toString()) return '#F093FB'; // Bright pink for current year
+                if (yearNum > 2032) return '#FF6B6B'; // Red for post-singularity explosion
                 return '#667EEA'; // Default purple
               }),
               pointBorderColor: years.map((year, index) => {
+                const yearNum = parseInt(year);
                 if (year === '2032') return '#FFFFFF'; // White border for singularity
                 if (year === currentYear.toString()) return '#FFFFFF'; // White border for current year
+                if (yearNum > 2032) return '#FFFFFF'; // White border for post-singularity
                 return '#667EEA'; // Default border
               }),
               pointBorderWidth: years.map((year, index) => {
+                const yearNum = parseInt(year);
                 if (year === '2032' || year === currentYear.toString()) return 4; // Thicker border for key points
+                if (yearNum > 2032) return 3; // Thick border for post-singularity
                 return 2; // Default border
               }),
               pointRadius: years.map((year, index) => {
+                const yearNum = parseInt(year);
                 if (year === '2032') return 12; // Largest for singularity
                 if (year === currentYear.toString()) return 10; // Large for current year
+                if (yearNum > 2032) return 7; // Medium-large for post-singularity
                 return 5; // Default size
               }),
               pointHoverRadius: years.map((year, index) => {
+                const yearNum = parseInt(year);
                 if (year === '2032') return 15; // Largest hover for singularity
                 if (year === currentYear.toString()) return 12; // Large hover for current year
+                if (yearNum > 2032) return 10; // Large hover for post-singularity
                 return 8; // Default hover
               }),
+
               fill: true
             }]
           },
@@ -108,18 +122,29 @@ export default function SingularityProgression() {
                 callbacks: {
                   title: function(context) {
                     const year = context[0].label;
-                    if (year === '2032') return '🎯 SINGULARITY YEAR';
-                    if (year === currentYear.toString()) return '📍 CURRENT YEAR';
+                    const yearNum = parseInt(year);
+                    if (year === '2032') return 'SINGULARITY POINT';
+                    if (year === currentYear.toString()) return 'CURRENT YEAR';
+                    if (yearNum > 2032) return 'POST-SINGULARITY ERA';
                     return `Year ${year}`;
                   },
                   label: function(context) {
                     const year = parseInt(context.label);
                     const progress = context.parsed.y;
                     
-                    if (year === 2032 && progress >= 100) {
-                      return [`AI Surpasses Human Intelligence`, `Progress: ${progress}%`, `Technological Singularity Achieved!`];
+                    if (year === 2032) {
+                      return [`AI Surpasses Human Intelligence`, `Progress: ${progress}%`, `Technological Singularity Achieved`];
                     } else if (year === currentYear) {
-                      return [`Current AI Development Level`, `Progress: ${progress}%`, `${100 - progress}% remaining to singularity`];
+                      return [`Current AI Development Level`, `Progress: ${progress}%`, `${Math.round(100 - progress)}% remaining to singularity`];
+                    } else if (year > 2032) {
+                      const yearsPast = year - 2032;
+                      const multiplier = Math.round(progress / 100);
+                      return [
+                        `Post-Singularity Intelligence`,
+                        `${multiplier}x Human Intelligence`,
+                        `${yearsPast} years past singularity`,
+                        `Exponential capability growth`
+                      ];
                     } else if (year > currentYear) {
                       return [`Projected AI Progress`, `Estimated: ${progress}%`];
                     } else {
@@ -153,19 +178,23 @@ export default function SingularityProgression() {
                 }
               },
               y: {
+                type: 'logarithmic',
                 title: {
                   display: true,
-                  text: 'Singularity Progress (%)',
+                  text: 'Intelligence Level (% of Human Baseline)',
                   color: '#E5E7EB',
                   font: { family: 'Orbitron', size: 14, weight: 'bold' }
                 },
-                min: 0,
-                max: 110,
+                min: 1,
+                max: 10000,
                 ticks: { 
                   color: '#E5E7EB',
                   font: { family: 'JetBrains Mono', size: 12 },
                   callback: function(value) {
-                    return value + '%';
+                    const numValue = Number(value);
+                    if (numValue >= 1000) return (numValue / 1000) + 'k%';
+                    if (numValue >= 100) return numValue + '%';
+                    return numValue + '%';
                   }
                 },
                 grid: { 
@@ -210,18 +239,22 @@ export default function SingularityProgression() {
         </div>
         
         {/* Legend */}
-        <div className="flex flex-wrap justify-center gap-6 mb-4">
+        <div className="flex flex-wrap justify-center gap-4 mb-4">
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: '#F093FB' }}></div>
-            <span className="text-sm text-light-grey font-inter">Current Year ({new Date().getFullYear()})</span>
+            <span className="text-xs text-light-grey font-inter">Current Year ({new Date().getFullYear()})</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: '#10B981' }}></div>
-            <span className="text-sm text-light-grey font-inter">Singularity Point (2032)</span>
+            <span className="text-xs text-light-grey font-inter">Singularity Point (2032)</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: '#FF6B6B' }}></div>
+            <span className="text-xs text-light-grey font-inter">Post-Singularity Era</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 rounded-full border border-tech-purple" style={{ backgroundColor: '#667EEA' }}></div>
-            <span className="text-sm text-light-grey font-inter">Other Years</span>
+            <span className="text-xs text-light-grey font-inter">Pre-Singularity</span>
           </div>
         </div>
 
