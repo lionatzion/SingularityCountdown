@@ -32,6 +32,7 @@ export class MemStorage implements IStorage {
     const article: NewsArticle = {
       ...insertArticle,
       id,
+      imageUrl: insertArticle.imageUrl || null,
       createdAt: new Date(),
     };
     this.news.set(id, article);

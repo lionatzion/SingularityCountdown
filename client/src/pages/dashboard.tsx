@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import SingularityProgression from "@/components/singularity-progression";
 import CountdownTimer from "@/components/countdown-timer";
 import MetricsGrid from "@/components/metrics-grid";
 import ChartsSection from "@/components/charts-section";
@@ -63,7 +64,7 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Countdown Section */}
+        {/* Hero Section */}
         <section className="mb-12">
           <div className="text-center mb-8">
             <h2 className="text-4xl md:text-6xl font-orbitron font-bold text-white mb-4">
@@ -73,8 +74,13 @@ export default function Dashboard() {
               Predicting the convergence point where artificial intelligence exceeds human cognitive capabilities
             </p>
           </div>
-          <CountdownTimer />
         </section>
+
+        {/* Linear Progression Graph */}
+        <SingularityProgression />
+
+        {/* Countdown Timer Section */}
+        <CountdownTimer />
 
         {/* Metrics Dashboard */}
         <MetricsGrid />
