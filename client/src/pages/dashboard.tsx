@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import SingularityProgression from "@/components/singularity-progression";
 import CountdownTimer from "@/components/countdown-timer";
+import MLPredictionPanel from "@/components/ml-prediction-panel";
 import MetricsGrid from "@/components/metrics-grid";
 import ChartsSection from "@/components/charts-section";
 import NewsFeed from "@/components/news-feed";
@@ -81,6 +82,9 @@ export default function Dashboard() {
 
         {/* Countdown Timer Section */}
         <CountdownTimer />
+
+        {/* ML Prediction Panel */}
+        <MLPredictionPanel />
 
         {/* Metrics Dashboard */}
         <MetricsGrid />
