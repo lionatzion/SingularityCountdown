@@ -124,20 +124,20 @@ export default function MLPredictionPanel() {
             <>
               {/* Main Prediction Display */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gradient-to-br from-tech-purple/20 to-deep-purple/20 rounded-lg p-4 border border-tech-purple/30">
+                <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-tech-purple/50">
                   <div className="flex items-center space-x-2 mb-2">
                     <Calendar className="w-5 h-5 text-tech-purple" />
                     <h3 className="font-inter font-semibold text-white">Predicted Date</h3>
                   </div>
-                  <div className="text-2xl font-jetbrains font-bold text-tech-purple">
+                  <div className="text-2xl font-jetbrains font-bold text-white">
                     {formatDate((latestPrediction as any).predictedDate)}
                   </div>
-                  <div className="text-xs text-light-grey/60 mt-1">
+                  <div className="text-xs text-light-grey mt-1">
                     Model: {(latestPrediction as any).modelVersion}
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-neon-green/20 to-deep-purple/20 rounded-lg p-4 border border-neon-green/30">
+                <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-neon-green/50">
                   <div className="flex items-center space-x-2 mb-2">
                     <Target className="w-5 h-5 text-neon-green" />
                     <h3 className="font-inter font-semibold text-white">Confidence Score</h3>
@@ -153,15 +153,15 @@ export default function MLPredictionPanel() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-bright-pink/20 to-deep-purple/20 rounded-lg p-4 border border-bright-pink/30">
+                <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-bright-pink/50">
                   <div className="flex items-center space-x-2 mb-2">
                     <Brain className="w-5 h-5 text-bright-pink" />
                     <h3 className="font-inter font-semibold text-white">Analysis Factors</h3>
                   </div>
-                  <div className="text-lg font-jetbrains font-bold text-bright-pink mb-2">
+                  <div className="text-lg font-jetbrains font-bold text-white mb-2">
                     {(latestPrediction as any).analysisFactors?.length || 0} Key Factors
                   </div>
-                  <div className="text-xs text-light-grey/60">
+                  <div className="text-xs text-light-grey">
                     Generated {new Date((latestPrediction as any).createdAt).toLocaleDateString()}
                   </div>
                 </div>
@@ -175,7 +175,7 @@ export default function MLPredictionPanel() {
                     <Badge 
                       key={index} 
                       variant="secondary" 
-                      className="bg-tech-purple/20 text-tech-purple border-tech-purple/30"
+                      className="bg-slate-800/50 text-white border-slate-600/50 hover:bg-slate-700/50"
                     >
                       {factor}
                     </Badge>
@@ -189,8 +189,8 @@ export default function MLPredictionPanel() {
                   <h3 className="text-lg font-inter font-semibold text-white mb-3">Trend Analysis</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     {Object.entries(parseTrendData((latestPrediction as any).trendData)).map(([key, value]) => (
-                      <div key={key} className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-lg p-3 border border-gray-700/50">
-                        <div className="text-sm text-light-grey/70 mb-1 capitalize">
+                      <div key={key} className="bg-slate-800/50 rounded-lg p-3 border border-slate-600/50">
+                        <div className="text-sm text-light-grey mb-1 capitalize">
                           {key.replace(/([A-Z])/g, ' $1').trim()}
                         </div>
                         <div className="text-lg font-jetbrains font-bold text-white">
@@ -207,14 +207,14 @@ export default function MLPredictionPanel() {
                 <Button
                   variant="outline"
                   onClick={() => setShowAnalysis(!showAnalysis)}
-                  className="mb-3 border-tech-purple/30 text-tech-purple hover:bg-tech-purple/20"
+                  className="mb-3 border-slate-600/50 text-white hover:bg-slate-800/50 hover:text-white"
                 >
                   {showAnalysis ? 'Hide' : 'Show'} Detailed Analysis
                 </Button>
                 
                 {showAnalysis && (
-                  <div className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-lg p-4 border border-gray-700/30">
-                    <div className="text-sm text-light-grey/80 leading-relaxed whitespace-pre-wrap font-inter">
+                  <div className="bg-slate-800/30 rounded-lg p-6 border border-slate-600/30">
+                    <div className="text-sm text-white leading-relaxed whitespace-pre-wrap font-inter">
                       {(latestPrediction as any).rawAnalysis}
                     </div>
                   </div>
