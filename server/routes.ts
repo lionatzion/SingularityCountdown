@@ -1,7 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertNewsArticleSchema, insertMetricsSchema } from "@shared/schema";
+import { insertNewsArticleSchema, insertMetricsSchema, insertPredictionSchema } from "@shared/schema";
+import { MLPredictor } from "./ml-predictor";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get latest AI news
@@ -108,6 +109,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(metrics);
     } catch (error) {
       res.status(500).json({ message: "Failed to create metrics" });
+    }
+  });
+
+  // Get latest ML prediction
+  app.get("/api/predictions/latest", async (req, res) => {
+    try {
+      const prediction = await storage.getLatestPrediction();
+      res.json(prediction);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch prediction" });
+    }
+  });
+
+  // Generate new ML prediction
+  app.post("/api/predictions/generate", async (req, res) => {
+    try {
+      const predictor = new MLPredictor();
+      
+      // Get all available data for analysis
+      const allMetrics = await storage.getAllMetrics();
+      const recentNews = await storage.getLatestNews(20);
+      
+      // Generate ML prediction
+      const analysis = await predictor.analyzeSingularityPrediction(allMetrics, recentNews);
+      
+      // Store the prediction
+      const predictionData = {
+        modelVersion: "v1.0-gpt4o",
+        predictedDate: analysis.predictedDate,
+        confidenceScore: analysis.confidenceScore,
+        analysisFactors: analysis.analysisFactors,
+        rawAnalysis: analysis.rawAnalysis,
+        trendData: JSON.stringify(analysis.trendData)
+      };
+
+      const validation = insertPredictionSchema.safeParse(predictionData);
+      if (!validation.success) {
+        res.status(400).json({ message: "Invalid prediction data", errors: validation.error.errors });
+        return;
+      }
+
+      const storedPrediction = await storage.createPrediction(validation.data);
+      
+      res.json({
+        prediction: storedPrediction,
+        analysis: analysis
+      });
+    } catch (error) {
+      console.error("Error generating prediction:", error);
+      res.status(500).json({ message: "Failed to generate prediction" });
     }
   });
 
