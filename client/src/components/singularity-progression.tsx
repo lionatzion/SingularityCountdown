@@ -53,47 +53,46 @@ export default function SingularityProgression() {
           data: {
             labels: years,
             datasets: [{
-              label: 'Singularity Progress (%)',
+              label: 'Intelligence Progress (%)',
               data: singularityProgress,
               borderColor: '#667EEA',
               backgroundColor: 'rgba(102, 126, 234, 0.1)',
               borderWidth: 3,
               tension: 0.4,
-              pointBackgroundColor: years.map((year, index) => {
+              pointBackgroundColor: years.map((year) => {
                 const yearNum = parseInt(year);
                 if (year === '2032') return '#10B981'; // Bright green for singularity
                 if (year === currentYear.toString()) return '#F093FB'; // Bright pink for current year
                 if (yearNum > 2032) return '#FF6B6B'; // Red for post-singularity explosion
                 return '#667EEA'; // Default purple
               }),
-              pointBorderColor: years.map((year, index) => {
+              pointBorderColor: years.map((year) => {
                 const yearNum = parseInt(year);
-                if (year === '2032') return '#FFFFFF'; // White border for singularity
-                if (year === currentYear.toString()) return '#FFFFFF'; // White border for current year
-                if (yearNum > 2032) return '#FFFFFF'; // White border for post-singularity
+                if (year === '2032' || year === currentYear.toString() || yearNum > 2032) {
+                  return '#FFFFFF'; // White border for key points
+                }
                 return '#667EEA'; // Default border
               }),
-              pointBorderWidth: years.map((year, index) => {
+              pointBorderWidth: years.map((year) => {
                 const yearNum = parseInt(year);
-                if (year === '2032' || year === currentYear.toString()) return 4; // Thicker border for key points
-                if (yearNum > 2032) return 3; // Thick border for post-singularity
-                return 2; // Default border
+                if (year === '2032' || year === currentYear.toString()) return 4;
+                if (yearNum > 2032) return 3;
+                return 2;
               }),
-              pointRadius: years.map((year, index) => {
+              pointRadius: years.map((year) => {
                 const yearNum = parseInt(year);
-                if (year === '2032') return 12; // Largest for singularity
-                if (year === currentYear.toString()) return 10; // Large for current year
-                if (yearNum > 2032) return 7; // Medium-large for post-singularity
-                return 5; // Default size
+                if (year === '2032') return 12;
+                if (year === currentYear.toString()) return 10;
+                if (yearNum > 2032) return 7;
+                return 5;
               }),
-              pointHoverRadius: years.map((year, index) => {
+              pointHoverRadius: years.map((year) => {
                 const yearNum = parseInt(year);
-                if (year === '2032') return 15; // Largest hover for singularity
-                if (year === currentYear.toString()) return 12; // Large hover for current year
-                if (yearNum > 2032) return 10; // Large hover for post-singularity
-                return 8; // Default hover
+                if (year === '2032') return 15;
+                if (year === currentYear.toString()) return 12;
+                if (yearNum > 2032) return 10;
+                return 8;
               }),
-
               fill: true
             }]
           },
@@ -151,10 +150,6 @@ export default function SingularityProgression() {
                     return '• Beyond human comprehension levels';
                   }
                 }
-              },
-              animation: {
-                duration: 2000,
-                easing: 'easeInOutQuart'
               }
             },
             scales: {
@@ -187,11 +182,11 @@ export default function SingularityProgression() {
                 ticks: { 
                   color: '#E5E7EB',
                   font: { family: 'JetBrains Mono', size: 12 },
-                  callback: function(value) {
-                    const numValue = Number(value);
-                    if (numValue >= 1000) return (numValue / 1000) + 'k%';
-                    if (numValue >= 100) return numValue + '%';
-                    return numValue + '%';
+                  callback: function(value: any) {
+                    if (value === 100) return '100% (Human Baseline)';
+                    if (value === 1000) return '1000% (10x Human)';
+                    if (value === 10000) return '10000% (100x Human)';
+                    return value + '%';
                   }
                 },
                 grid: { 
@@ -200,11 +195,34 @@ export default function SingularityProgression() {
                 }
               }
             },
-            // Add annotation for singularity point
+            animation: {
+              duration: 2000,
+              easing: 'easeInOutQuart'
+            },
             elements: {
               point: {
-                hoverBorderWidth: 4,
-                hoverRadius: 10
+                hoverRadius: 15
+              }
+            },
+            onHover: (event: any, elements: any) => {
+              if (elements.length > 0) {
+                const dataIndex = elements[0].index;
+                const year = years[dataIndex];
+                const value = singularityProgress[dataIndex];
+                
+                let impact = '';
+                const yearNum = parseInt(year);
+                if (yearNum < 2032) {
+                  impact = 'Pre-singularity development phase';
+                } else if (yearNum === 2032) {
+                  impact = 'Technological singularity achieved';
+                } else {
+                  impact = 'Post-singularity exponential growth';
+                }
+                
+                setHoveredPoint({ year, value, impact });
+              } else {
+                setHoveredPoint(null);
               }
             }
           }
@@ -217,58 +235,144 @@ export default function SingularityProgression() {
         chartInstance.current.destroy();
       }
     };
-  }, []);
+  }, [selectedPeriod]);
+
+  const getPeriodData = () => {
+    const baseDescription = "Interactive timeline showing exponential AI progress toward and beyond technological singularity";
+    
+    switch(selectedPeriod) {
+      case 'pre':
+        return {
+          description: "Pre-Singularity Era: Current AI development and rapid acceleration phase",
+          highlight: "Years 2020-2031"
+        };
+      case 'singularity':
+        return {
+          description: "Singularity Point: The moment AI surpasses human intelligence across all domains",
+          highlight: "Year 2032"
+        };
+      case 'post':
+        return {
+          description: "Post-Singularity Era: Exponential intelligence explosion beyond human comprehension",
+          highlight: "Years 2033-2040+"
+        };
+      default:
+        return {
+          description: baseDescription,
+          highlight: "Full Timeline 2020-2040"
+        };
+    }
+  };
+
+  const periodData = getPeriodData();
 
   return (
     <section className="mb-12">
-      <div className="glow-border rounded-2xl p-8 gradient-bg">
+      <div className="bg-slate-900/50 border border-tech-purple/30 rounded-2xl p-8 backdrop-blur-sm">
         <div className="text-center mb-6">
           <h3 className="text-2xl font-orbitron font-bold text-white mb-2">
-            Singularity Progression Timeline
+            Interactive Singularity Timeline
           </h3>
-          <p className="text-sm text-light-grey/70">
-            Exponential growth trajectory toward technological singularity
+          <p className="text-sm text-light-grey mb-4">
+            {periodData.description}
           </p>
+          
+          {/* Period Selection Buttons */}
+          <div className="flex flex-wrap justify-center gap-2 mb-4">
+            {[
+              { key: 'all', label: 'Full Timeline', color: 'tech-purple' },
+              { key: 'pre', label: 'Pre-Singularity', color: 'tech-purple' },
+              { key: 'singularity', label: 'Singularity Point', color: 'neon-green' },
+              { key: 'post', label: 'Post-Singularity', color: 'bright-pink' }
+            ].map(period => (
+              <button
+                key={period.key}
+                onClick={() => setSelectedPeriod(period.key as any)}
+                className={`px-4 py-2 rounded-lg text-xs font-inter font-medium transition-all duration-300 ${
+                  selectedPeriod === period.key
+                    ? 'bg-tech-purple text-white shadow-lg'
+                    : 'bg-slate-800/50 text-light-grey border border-slate-600/50 hover:bg-slate-700/50'
+                }`}
+              >
+                {period.label}
+              </button>
+            ))}
+          </div>
         </div>
         
-        <div className="h-80 mb-4">
+        <div className="h-80 mb-6 relative">
           <canvas ref={chartRef}></canvas>
+          
+          {/* Hover Information Overlay */}
+          {hoveredPoint && (
+            <div className="absolute top-4 right-4 bg-slate-800/90 border border-tech-purple/50 rounded-lg p-4 backdrop-blur-sm">
+              <div className="text-sm font-jetbrains font-bold text-white mb-1">
+                Year {hoveredPoint.year}
+              </div>
+              <div className="text-xs text-light-grey mb-1">
+                Intelligence: {hoveredPoint.value}%
+              </div>
+              <div className="text-xs text-tech-purple">
+                {hoveredPoint.impact}
+              </div>
+            </div>
+          )}
         </div>
         
-        {/* Legend */}
-        <div className="flex flex-wrap justify-center gap-4 mb-4">
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: '#F093FB' }}></div>
-            <span className="text-xs text-light-grey font-inter">Current Year ({new Date().getFullYear()})</span>
+        {/* Enhanced Legend with Growth Phases */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+          <div className="flex items-center space-x-2 bg-slate-800/30 rounded-lg p-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#667EEA' }}></div>
+            <span className="text-xs text-light-grey font-inter">Current Progress</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: '#10B981' }}></div>
-            <span className="text-xs text-light-grey font-inter">Singularity Point (2032)</span>
+          <div className="flex items-center space-x-2 bg-slate-800/30 rounded-lg p-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#F093FB' }}></div>
+            <span className="text-xs text-light-grey font-inter">Today ({new Date().getFullYear()})</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: '#FF6B6B' }}></div>
-            <span className="text-xs text-light-grey font-inter">Post-Singularity Era</span>
+          <div className="flex items-center space-x-2 bg-slate-800/30 rounded-lg p-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#10B981' }}></div>
+            <span className="text-xs text-light-grey font-inter">Singularity (2032)</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full border border-tech-purple" style={{ backgroundColor: '#667EEA' }}></div>
-            <span className="text-xs text-light-grey font-inter">Pre-Singularity</span>
+          <div className="flex items-center space-x-2 bg-slate-800/30 rounded-lg p-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#FF6B6B' }}></div>
+            <span className="text-xs text-light-grey font-inter">Post-Singularity</span>
           </div>
         </div>
 
+        {/* Growth Phase Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-          <div className="bg-gradient-to-br from-bright-pink/20 to-deep-purple/20 rounded-lg p-3 border border-bright-pink/30">
-            <div className="text-lg font-jetbrains font-bold text-bright-pink">
+          <div className="bg-slate-800/30 rounded-lg p-4 border border-tech-purple/30">
+            <div className="text-xl font-jetbrains font-bold text-white mb-1">
               {new Date().getFullYear()}
             </div>
-            <div className="text-xs text-light-grey/60 uppercase tracking-wide">Current Year</div>
+            <div className="text-xs text-light-grey uppercase tracking-wide mb-2">Current Year</div>
+            <div className="text-xs text-tech-purple">
+              Rapid AI Development Phase
+            </div>
           </div>
-          <div className="bg-gradient-to-br from-neon-green/20 to-deep-purple/20 rounded-lg p-3 border border-neon-green/30">
-            <div className="text-lg font-jetbrains font-bold text-neon-green">2032</div>
-            <div className="text-xs text-light-grey/60 uppercase tracking-wide">Predicted Singularity</div>
+          <div className="bg-slate-800/30 rounded-lg p-4 border border-neon-green/30">
+            <div className="text-xl font-jetbrains font-bold text-neon-green mb-1">2032</div>
+            <div className="text-xs text-light-grey uppercase tracking-wide mb-2">Singularity Point</div>
+            <div className="text-xs text-neon-green">
+              AI = Human Intelligence
+            </div>
           </div>
-          <div className="bg-gradient-to-br from-tech-purple/20 to-deep-purple/20 rounded-lg p-3 border border-tech-purple/30">
-            <div className="text-lg font-jetbrains font-bold text-tech-purple">100%</div>
-            <div className="text-xs text-light-grey/60 uppercase tracking-wide">Target Progress</div>
+          <div className="bg-slate-800/30 rounded-lg p-4 border border-bright-pink/30">
+            <div className="text-xl font-jetbrains font-bold text-bright-pink mb-1">∞</div>
+            <div className="text-xs text-light-grey uppercase tracking-wide mb-2">Post-Singularity</div>
+            <div className="text-xs text-bright-pink">
+              Exponential Intelligence Explosion
+            </div>
+          </div>
+        </div>
+        
+        {/* Growth Rate Indicator */}
+        <div className="mt-6 text-center">
+          <div className="text-sm text-light-grey/70 mb-2">
+            Selected Period: <span className="text-white font-semibold">{periodData.highlight}</span>
+          </div>
+          <div className="text-xs text-tech-purple">
+            Hover timeline points for detailed projections • Logarithmic scale shows exponential growth
           </div>
         </div>
       </div>
