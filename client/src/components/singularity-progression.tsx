@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
@@ -6,6 +6,8 @@ Chart.register(...registerables);
 export default function SingularityProgression() {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
+  const [hoveredPoint, setHoveredPoint] = useState<{ year: string; value: number; impact: string } | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState<'all' | 'pre' | 'singularity' | 'post'>('all');
 
   useEffect(() => {
     if (chartRef.current) {
@@ -116,48 +118,43 @@ export default function SingularityProgression() {
                 titleColor: '#E5E7EB',
                 bodyColor: '#E5E7EB',
                 borderColor: '#667EEA',
-                borderWidth: 2,
+                borderWidth: 1,
                 cornerRadius: 8,
                 displayColors: false,
                 callbacks: {
-                  title: function(context) {
+                  title: function(context: any) {
                     const year = context[0].label;
                     const yearNum = parseInt(year);
-                    if (year === '2032') return 'SINGULARITY POINT';
-                    if (year === currentYear.toString()) return 'CURRENT YEAR';
-                    if (yearNum > 2032) return 'POST-SINGULARITY ERA';
-                    return `Year ${year}`;
+                    if (yearNum < 2032) return `Pre-Singularity Era: ${year}`;
+                    if (yearNum === 2032) return `🚀 SINGULARITY POINT: ${year}`;
+                    return `Post-Singularity Era: ${year}`;
                   },
-                  label: function(context) {
+                  label: function(context: any) {
                     const year = parseInt(context.label);
-                    const progress = context.parsed.y;
+                    const value = context.parsed.y;
                     
-                    if (year === 2032) {
-                      return [`AI Surpasses Human Intelligence`, `Progress: ${progress}%`, `Technological Singularity Achieved`];
-                    } else if (year === currentYear) {
-                      return [`Current AI Development Level`, `Progress: ${progress}%`, `${Math.round(100 - progress)}% remaining to singularity`];
-                    } else if (year > 2032) {
-                      const yearsPast = year - 2032;
-                      const multiplier = Math.round(progress / 100);
-                      return [
-                        `Post-Singularity Intelligence`,
-                        `${multiplier}x Human Intelligence`,
-                        `${yearsPast} years past singularity`,
-                        `Exponential capability growth`
-                      ];
-                    } else if (year > currentYear) {
-                      return [`Projected AI Progress`, `Estimated: ${progress}%`];
+                    if (year < 2032) {
+                      return `Progress: ${value}%\nExponential acceleration toward superintelligence`;
+                    } else if (year === 2032) {
+                      return `Progress: 100% - SINGULARITY ACHIEVED!\nAI surpasses human intelligence`;
                     } else {
-                      return [`Historical Progress`, `Achieved: ${progress}%`];
+                      const multiplier = (value / 100).toFixed(1);
+                      return `Progress: ${value}% (${multiplier}x human baseline)\nExponential capability explosion`;
                     }
                   },
-                  labelColor: function(context) {
-                    const year = context.label;
-                    if (year === '2032') return { borderColor: '#10B981', backgroundColor: '#10B981' };
-                    if (year === currentYear.toString()) return { borderColor: '#F093FB', backgroundColor: '#F093FB' };
-                    return { borderColor: '#667EEA', backgroundColor: '#667EEA' };
+                  afterLabel: function(context: any) {
+                    const year = parseInt(context.label);
+                    if (year < 2025) return '• Current AI capabilities';
+                    if (year < 2030) return '• Rapid AI advancement phase';
+                    if (year === 2032) return '• Technological singularity threshold';
+                    if (year < 2035) return '• Post-human intelligence era begins';
+                    return '• Beyond human comprehension levels';
                   }
                 }
+              },
+              animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
               }
             },
             scales: {
