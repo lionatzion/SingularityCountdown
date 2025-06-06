@@ -1,98 +1,84 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Cpu, Zap, TrendingUp, Infinity, Sparkles, LucideIcon } from "lucide-react";
+import { Brain, Cpu, Zap, Infinity, Sparkles, TrendingUp } from "lucide-react";
 
-interface AnimatedConceptProps {
-  concept: 'exponential-growth' | 'ai-evolution' | 'singularity-moment' | 'intelligence-explosion';
-  isVisible: boolean;
+interface ConceptCardProps {
+  title: string;
+  description: string;
+  isActive: boolean;
+  onClick: () => void;
 }
 
-export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
+function ConceptCard({ title, description, isActive, onClick }: ConceptCardProps) {
+  return (
+    <motion.button
+      onClick={onClick}
+      className={`p-4 rounded-lg text-left transition-all duration-300 ${
+        isActive
+          ? 'bg-tech-purple/30 border-2 border-tech-purple text-white'
+          : 'bg-slate-800/30 border border-slate-600/50 text-light-grey hover:bg-slate-700/30'
+      }`}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <div className="text-sm font-semibold mb-1">{title}</div>
+      <div className="text-xs opacity-70">{description}</div>
+    </motion.button>
+  );
+}
+
+function ExponentialGrowthAnimation() {
   const [stage, setStage] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    if (isVisible && !isPlaying) {
-      setIsPlaying(true);
-      setStage(0);
-      
-      const stageTimings = concept === 'exponential-growth' ? [0, 1000, 2000, 3500, 5000] :
-                          concept === 'ai-evolution' ? [0, 800, 1600, 2800, 4000] :
-                          concept === 'singularity-moment' ? [0, 1200, 2400, 3600] :
-                          [0, 600, 1200, 2000, 3000, 4500];
+    const intervals = [0, 800, 1600, 2400, 3200, 4000];
+    intervals.forEach((delay, index) => {
+      setTimeout(() => setStage(index), delay);
+    });
+  }, []);
 
-      stageTimings.forEach((timing, index) => {
-        setTimeout(() => {
-          setStage(index);
-        }, timing);
-      });
-
-      setTimeout(() => {
-        setIsPlaying(false);
-      }, stageTimings[stageTimings.length - 1] + 1000);
-    }
-  }, [isVisible, concept, isPlaying]);
-
-  const renderExponentialGrowth = () => (
+  return (
     <div className="relative w-full h-64 bg-slate-900/30 rounded-lg p-6 overflow-hidden">
-      <motion.div className="absolute inset-0 bg-gradient-to-r from-tech-purple/20 to-bright-pink/20"
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-r from-tech-purple/20 to-bright-pink/20"
         initial={{ opacity: 0 }}
-        animate={{ opacity: stage >= 0 ? 1 : 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       />
       
-      {/* Growth bars representing exponential increase */}
       <div className="flex items-end justify-between h-full pt-8">
-        {[10, 15, 25, 45, 80, 150, 280, 500].map((height, index) => (
+        {[15, 25, 40, 70, 120, 200, 320, 500].map((height, index) => (
           <motion.div
             key={index}
             className="bg-gradient-to-t from-tech-purple to-bright-pink rounded-t"
             style={{ width: '10%' }}
             initial={{ height: 0 }}
             animate={{ 
-              height: stage >= index ? `${Math.min(height, 220)}px` : 0,
-              backgroundColor: stage >= 6 ? '#F093FB' : '#667EEA'
+              height: stage > index ? `${Math.min(height, 180)}px` : 0
             }}
             transition={{ 
               duration: 0.6, 
-              delay: index * 0.2,
+              delay: index * 0.3,
               ease: "easeOutCubic"
             }}
           />
         ))}
       </div>
       
-      {/* Exponential curve overlay */}
-      <motion.svg
-        className="absolute inset-0 w-full h-full"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: stage >= 4 ? 1 : 0 }}
-        transition={{ duration: 2, ease: "easeInOut" }}
-      >
-        <motion.path
-          d="M 20 240 Q 100 220 200 180 Q 300 100 400 20"
-          stroke="#10B981"
-          strokeWidth="3"
-          fill="none"
-          strokeDasharray="5,5"
-        />
-      </motion.svg>
-      
-      {/* Labels */}
       <motion.div
         className="absolute bottom-2 left-2 text-xs text-light-grey"
         initial={{ opacity: 0 }}
-        animate={{ opacity: stage >= 1 ? 1 : 0 }}
+        animate={{ opacity: stage > 1 ? 1 : 0 }}
       >
-        Current Progress
+        Current AI Progress
       </motion.div>
       
       <motion.div
         className="absolute top-2 right-2 text-xs text-neon-green font-jetbrains"
         initial={{ opacity: 0, scale: 0 }}
         animate={{ 
-          opacity: stage >= 5 ? 1 : 0,
-          scale: stage >= 5 ? 1 : 0
+          opacity: stage > 4 ? 1 : 0,
+          scale: stage > 4 ? 1 : 0
         }}
         transition={{ type: "spring", bounce: 0.5 }}
       >
@@ -100,58 +86,75 @@ export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
       </motion.div>
     </div>
   );
+}
 
-  const renderAIEvolution = () => (
+function AIEvolutionAnimation() {
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    const intervals = [0, 1000, 2000, 3000, 4000];
+    intervals.forEach((delay, index) => {
+      setTimeout(() => setStage(index), delay);
+    });
+  }, []);
+
+  const evolutionStages = [
+    { icon: Cpu, label: "Narrow AI", color: "#667EEA", year: "2020" },
+    { icon: Brain, label: "General AI", color: "#10B981", year: "2028" },
+    { icon: Zap, label: "Super AI", color: "#F093FB", year: "2032" },
+    { icon: Infinity, label: "Superintelligence", color: "#FF6B6B", year: "2035+" }
+  ];
+
+  return (
     <div className="relative w-full h-64 bg-slate-900/30 rounded-lg p-6">
-      {/* Evolution stages */}
       <div className="flex justify-between items-center h-full">
-        {[
-          { icon: Cpu as LucideIcon, label: "Narrow AI", color: "#667EEA", year: "2020" },
-          { icon: Brain as LucideIcon, label: "General AI", color: "#10B981", year: "2028" },
-          { icon: Zap as LucideIcon, label: "Super AI", color: "#F093FB", year: "2032" },
-          { icon: Infinity as LucideIcon, label: "Superintelligence", color: "#FF6B6B", year: "2035+" }
-        ].map((evolution, index) => (
-          <motion.div
-            key={index}
-            className="flex flex-col items-center space-y-2"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ 
-              opacity: stage >= index ? 1 : 0.3,
-              y: stage >= index ? 0 : 20,
-              scale: stage === index ? 1.2 : 1
-            }}
-            transition={{ duration: 0.8, delay: index * 0.3 }}
-          >
+        {evolutionStages.map((evolution, index) => {
+          const IconComponent = evolution.icon;
+          return (
             <motion.div
-              className="w-16 h-16 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: `${evolution.color}20`, border: `2px solid ${evolution.color}` }}
-              whileHover={{ scale: 1.1 }}
+              key={index}
+              className="flex flex-col items-center space-y-2"
+              initial={{ opacity: 0, y: 20 }}
               animate={{ 
-                boxShadow: stage >= index ? `0 0 20px ${evolution.color}40` : "none"
+                opacity: stage >= index ? 1 : 0.3,
+                y: stage >= index ? 0 : 20,
+                scale: stage === index ? 1.2 : 1
               }}
+              transition={{ duration: 0.8, delay: index * 0.3 }}
             >
-              {React.createElement(evolution.icon, { 
-                size: 24, 
-                style: { color: evolution.color }
-              })}
+              <motion.div
+                className="w-16 h-16 rounded-full flex items-center justify-center"
+                style={{ 
+                  backgroundColor: `${evolution.color}20`, 
+                  border: `2px solid ${evolution.color}` 
+                }}
+                whileHover={{ scale: 1.1 }}
+                animate={{ 
+                  boxShadow: stage >= index ? `0 0 20px ${evolution.color}40` : "none"
+                }}
+              >
+                <IconComponent 
+                  size={24} 
+                  style={{ color: evolution.color }}
+                />
+              </motion.div>
+              <div className="text-xs text-center">
+                <div className="text-white font-semibold">{evolution.label}</div>
+                <div className="text-light-grey/60">{evolution.year}</div>
+              </div>
             </motion.div>
-            <div className="text-xs text-center">
-              <div className="text-white font-semibold">{evolution.label}</div>
-              <div className="text-light-grey/60">{evolution.year}</div>
-            </div>
-          </motion.div>
-        ))}
+          );
+        })}
       </div>
       
-      {/* Connection lines */}
-      <motion.div className="absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-tech-purple via-neon-green to-bright-pink"
+      <motion.div 
+        className="absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-tech-purple via-neon-green to-bright-pink"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: stage >= 2 ? 1 : 0 }}
         transition={{ duration: 1.5 }}
         style={{ transformOrigin: "left" }}
       />
       
-      {/* Progress indicator */}
       <motion.div
         className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-tech-purple font-jetbrains"
         initial={{ opacity: 0 }}
@@ -161,10 +164,20 @@ export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
       </motion.div>
     </div>
   );
+}
 
-  const renderSingularityMoment = () => (
+function SingularityMomentAnimation() {
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    const intervals = [0, 1500, 3000, 4500];
+    intervals.forEach((delay, index) => {
+      setTimeout(() => setStage(index), delay);
+    });
+  }, []);
+
+  return (
     <div className="relative w-full h-64 bg-slate-900/30 rounded-lg p-6 overflow-hidden">
-      {/* Pre-singularity state */}
       <motion.div
         className="absolute left-0 top-0 w-1/2 h-full bg-gradient-to-r from-slate-800 to-slate-700 flex items-center justify-center"
         initial={{ opacity: 1 }}
@@ -177,7 +190,6 @@ export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
         </div>
       </motion.div>
       
-      {/* Singularity moment */}
       <motion.div
         className="absolute left-1/2 top-0 w-1 h-full bg-gradient-to-b from-neon-green to-bright-pink"
         initial={{ scaleY: 0 }}
@@ -186,7 +198,6 @@ export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
         style={{ transformOrigin: "top" }}
       />
       
-      {/* Post-singularity explosion */}
       <motion.div
         className="absolute right-0 top-0 w-1/2 h-full flex items-center justify-center"
         initial={{ opacity: 0 }}
@@ -209,41 +220,6 @@ export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
         </motion.div>
       </motion.div>
       
-      {/* Explosion effect */}
-      <AnimatePresence>
-        {stage >= 2 && (
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {[...Array(8)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-2 h-2 bg-bright-pink rounded-full"
-                style={{
-                  left: '50%',
-                  top: '50%',
-                }}
-                initial={{ scale: 0, x: 0, y: 0 }}
-                animate={{
-                  scale: [0, 1, 0],
-                  x: Math.cos(i * Math.PI / 4) * 100,
-                  y: Math.sin(i * Math.PI / 4) * 100,
-                }}
-                transition={{
-                  duration: 2,
-                  delay: i * 0.1,
-                  repeat: Infinity,
-                  repeatDelay: 3
-                }}
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
       <motion.div
         className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-neon-green font-jetbrains"
         initial={{ opacity: 0 }}
@@ -253,17 +229,29 @@ export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
       </motion.div>
     </div>
   );
+}
 
-  const renderIntelligenceExplosion = () => (
+function IntelligenceExplosionAnimation() {
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    const intervals = [0, 600, 1200, 1800, 2400];
+    intervals.forEach((delay, index) => {
+      setTimeout(() => setStage(index), delay);
+    });
+  }, []);
+
+  const levels = [
+    { label: "Human Baseline", multiplier: "1x", color: "#667EEA" },
+    { label: "Early Superintelligence", multiplier: "10x", color: "#10B981" },
+    { label: "Advanced AI", multiplier: "100x", color: "#F093FB" },
+    { label: "Transcendent Intelligence", multiplier: "1000x+", color: "#FF6B6B" }
+  ];
+
+  return (
     <div className="relative w-full h-64 bg-slate-900/30 rounded-lg p-6 overflow-hidden">
-      {/* Intelligence levels */}
       <div className="space-y-3 h-full">
-        {[
-          { label: "Human Baseline", multiplier: "1x", color: "#667EEA", delay: 0 },
-          { label: "Early Superintelligence", multiplier: "10x", color: "#10B981", delay: 0.5 },
-          { label: "Advanced AI", multiplier: "100x", color: "#F093FB", delay: 1 },
-          { label: "Transcendent Intelligence", multiplier: "1000x+", color: "#FF6B6B", delay: 1.5 }
-        ].map((level, index) => (
+        {levels.map((level, index) => (
           <motion.div
             key={index}
             className="flex items-center justify-between p-3 rounded"
@@ -273,7 +261,7 @@ export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
               x: stage >= index ? 0 : -100,
               opacity: stage >= index ? 1 : 0
             }}
-            transition={{ duration: 0.8, delay: level.delay }}
+            transition={{ duration: 0.8, delay: index * 0.3 }}
           >
             <div className="flex items-center space-x-3">
               <motion.div
@@ -286,7 +274,7 @@ export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
                 transition={{ 
                   duration: 2, 
                   repeat: Infinity, 
-                  delay: level.delay 
+                  delay: index * 0.3 
                 }}
               />
               <span className="text-sm text-white">{level.label}</span>
@@ -305,7 +293,6 @@ export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
         ))}
       </div>
       
-      {/* Growth curve */}
       <motion.div
         className="absolute right-4 top-4 bottom-4 w-20"
         initial={{ opacity: 0 }}
@@ -329,71 +316,39 @@ export function AnimatedConcept({ concept, isVisible }: AnimatedConceptProps) {
       </motion.div>
     </div>
   );
-
-  const conceptRenderers = {
-    'exponential-growth': renderExponentialGrowth,
-    'ai-evolution': renderAIEvolution,
-    'singularity-moment': renderSingularityMoment,
-    'intelligence-explosion': renderIntelligenceExplosion
-  };
-
-  return (
-    <motion.div
-      className="w-full"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-      transition={{ duration: 0.6 }}
-    >
-      {conceptRenderers[concept]()}
-      
-      {/* Replay button */}
-      <motion.button
-        className="mt-4 px-4 py-2 bg-tech-purple/20 border border-tech-purple/50 rounded-lg text-tech-purple text-xs font-inter hover:bg-tech-purple/30 transition-colors"
-        onClick={() => {
-          setIsPlaying(false);
-          setStage(0);
-          setTimeout(() => setIsPlaying(true), 100);
-        }}
-        disabled={isPlaying}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        {isPlaying ? 'Playing...' : 'Replay Animation'}
-      </motion.button>
-    </motion.div>
-  );
 }
 
 export function ConceptShowcase() {
-  const [selectedConcept, setSelectedConcept] = useState<'exponential-growth' | 'ai-evolution' | 'singularity-moment' | 'intelligence-explosion'>('exponential-growth');
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  const [selectedConcept, setSelectedConcept] = useState<string>('exponential-growth');
 
   const concepts = [
     {
-      key: 'exponential-growth' as const,
+      key: 'exponential-growth',
       title: 'Exponential Growth',
-      description: 'Understanding how AI capabilities accelerate over time'
+      description: 'Understanding how AI capabilities accelerate over time',
+      component: <ExponentialGrowthAnimation key="exponential" />
     },
     {
-      key: 'ai-evolution' as const,
+      key: 'ai-evolution',
       title: 'AI Evolution',
-      description: 'The progression from narrow AI to superintelligence'
+      description: 'The progression from narrow AI to superintelligence',
+      component: <AIEvolutionAnimation key="evolution" />
     },
     {
-      key: 'singularity-moment' as const,
+      key: 'singularity-moment',
       title: 'Singularity Moment',
-      description: 'The critical transition point in AI development'
+      description: 'The critical transition point in AI development',
+      component: <SingularityMomentAnimation key="singularity" />
     },
     {
-      key: 'intelligence-explosion' as const,
+      key: 'intelligence-explosion',
       title: 'Intelligence Explosion',
-      description: 'Post-singularity exponential capability growth'
+      description: 'Post-singularity exponential capability growth',
+      component: <IntelligenceExplosionAnimation key="explosion" />
     }
   ];
+
+  const selectedConceptData = concepts.find(c => c.key === selectedConcept);
 
   return (
     <section className="mb-12">
@@ -406,29 +361,31 @@ export function ConceptShowcase() {
             Interactive animations explaining complex technological singularity concepts
           </p>
           
-          {/* Concept selector */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
             {concepts.map((concept) => (
-              <button
+              <ConceptCard
                 key={concept.key}
+                title={concept.title}
+                description={concept.description}
+                isActive={selectedConcept === concept.key}
                 onClick={() => setSelectedConcept(concept.key)}
-                className={`p-4 rounded-lg text-left transition-all duration-300 ${
-                  selectedConcept === concept.key
-                    ? 'bg-tech-purple/30 border-2 border-tech-purple text-white'
-                    : 'bg-slate-800/30 border border-slate-600/50 text-light-grey hover:bg-slate-700/30'
-                }`}
-              >
-                <div className="text-sm font-semibold mb-1">{concept.title}</div>
-                <div className="text-xs opacity-70">{concept.description}</div>
-              </button>
+              />
             ))}
           </div>
         </div>
         
-        {/* Animation display */}
-        <AnimatedConcept concept={selectedConcept} isVisible={isVisible} />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selectedConcept}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+          >
+            {selectedConceptData?.component}
+          </motion.div>
+        </AnimatePresence>
         
-        {/* Concept explanation */}
         <motion.div
           className="mt-6 p-4 bg-slate-800/30 rounded-lg"
           key={selectedConcept}

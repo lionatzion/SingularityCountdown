@@ -5,7 +5,7 @@ import MLPredictionPanel from "@/components/ml-prediction-panel";
 import MetricsGrid from "@/components/metrics-grid";
 import ChartsSection from "@/components/charts-section";
 import NewsFeed from "@/components/news-feed";
-import { ConceptShowcase } from "@/components/micro-animations";
+import { ConceptShowcase } from "@/components/animated-concepts";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
