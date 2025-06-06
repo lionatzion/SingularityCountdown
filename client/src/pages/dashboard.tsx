@@ -95,6 +95,27 @@ export default function Dashboard() {
         {/* AI News Feed */}
         <NewsFeed />
       </main>
+      
+      {/* Footer */}
+      <footer className="mt-16 py-8 border-t border-slate-700/50">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="text-sm text-light-grey/70">
+              © 2025 RS Commercial Services, Inc. All rights reserved.
+            </div>
+            <div className="text-sm">
+              <a 
+                href="https://www.ai-explanation.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-tech-purple hover:text-bright-pink transition-colors duration-300 font-inter"
+              >
+                AI Model Analysis
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
