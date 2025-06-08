@@ -17,6 +17,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Fetch AI news from external API
+  // Add cache for rate limiting
+  let lastFetchTime = 0;
+  const FETCH_COOLDOWN = 30000; // 30 seconds between fetches
+
   app.post("/api/news/fetch", async (req, res) => {
     try {
       const NEWS_API_KEY = process.env.NEWS_API_KEY || process.env.VITE_NEWS_API_KEY;
@@ -26,11 +30,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return;
       }
 
+      const now = Date.now();
+      if (now - lastFetchTime < FETCH_COOLDOWN) {
+        // Return existing articles if within cooldown period
+        const existingArticles = await storage.getLatestNews(10);
+        res.json({ 
+          message: "Using cached articles (rate limit protection)", 
+          articlesStored: 0,
+          duplicatesSkipped: 0,
+          articles: existingArticles 
+        });
+        return;
+      }
+
+      lastFetchTime = now;
+
       const response = await fetch(
         `https://newsapi.org/v2/everything?q=artificial+intelligence+OR+machine+learning+OR+GPU+OR+neural+networks&sortBy=publishedAt&language=en&pageSize=20&apiKey=${NEWS_API_KEY}`
       );
 
       if (!response.ok) {
+        if (response.status === 429) {
+          // Rate limited - return existing articles
+          const existingArticles = await storage.getLatestNews(10);
+          res.json({ 
+            message: "Rate limited - using existing articles", 
+            articlesStored: 0,
+            duplicatesSkipped: 0,
+            articles: existingArticles 
+          });
+          return;
+        }
         throw new Error(`News API error: ${response.status}`);
       }
 
@@ -56,15 +86,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           const validation = insertNewsArticleSchema.safeParse(newsArticle);
           if (validation.success) {
-            const stored = await storage.createNewsArticle(validation.data);
-            
-            // Check if this was a new article or existing one
-            const isNew = stored.createdAt && new Date(stored.createdAt).getTime() > Date.now() - 5000; // Created within last 5 seconds
-            
-            if (isNew) {
+            try {
+              const stored = await storage.createNewsArticle(validation.data);
               processedArticles.push(stored);
-            } else {
-              skippedDuplicates.push(article.title);
+            } catch (error: any) {
+              // Handle duplicate articles gracefully
+              if (error.message?.includes('duplicate') || error.code === '23505') {
+                skippedDuplicates.push(article.title);
+              } else {
+                console.error('Error storing article:', error);
+              }
             }
           }
         }
