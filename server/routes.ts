@@ -156,6 +156,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Generate new ML prediction
   app.post("/api/predictions/generate", async (req, res) => {
     try {
+      // Check if OpenAI API key is configured
+      if (!process.env.OPENAI_API_KEY) {
+        res.status(500).json({ 
+          message: "OpenAI API key is not configured. Please set the OPENAI_API_KEY environment variable." 
+        });
+        return;
+      }
+
       const predictor = new MLPredictor();
       
       // Get all available data for analysis
@@ -187,9 +195,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         prediction: storedPrediction,
         analysis: analysis
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating prediction:", error);
-      res.status(500).json({ message: "Failed to generate prediction" });
+      
+      let errorMessage = "Failed to generate prediction";
+      let statusCode = 500;
+      
+      // Handle OpenAI API specific errors
+      if (error?.status === 401 || error?.message?.includes("API key")) {
+        errorMessage = "OpenAI API key is invalid or not configured";
+        statusCode = 401;
+      } else if (error?.status === 429) {
+        errorMessage = "OpenAI API rate limit exceeded";
+        statusCode = 429;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+      
+      res.status(statusCode).json({ message: errorMessage });
     }
   });
 

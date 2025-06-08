@@ -46,11 +46,25 @@ export default function MLPredictionPanel() {
         description: `New prediction: ${new Date(data.prediction.predictedDate).toLocaleDateString()} (${data.prediction.confidenceScore}% confidence)`,
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Failed to generate prediction:", error);
+      
+      let errorMessage = "Unable to generate ML prediction. Please try again.";
+      
+      // Check for specific error conditions
+      if (error?.message?.includes("API key") || error?.status === 401) {
+        errorMessage = "OpenAI API key is not configured. Please set the OPENAI_API_KEY environment variable.";
+      } else if (error?.status === 429) {
+        errorMessage = "Rate limit exceeded. Please try again in a few minutes.";
+      } else if (error?.status === 500) {
+        errorMessage = "Server error occurred. Please check the server logs for more details.";
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: "Prediction Generation Failed",
-        description: "Unable to generate ML prediction. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     },
