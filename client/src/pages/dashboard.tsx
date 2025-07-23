@@ -105,7 +105,7 @@ export default function Dashboard() {
             </div>
             <div className="text-sm">
               <a 
-                href="https://www.ai-explanation.com" 
+                href="https://ai-explanation.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-tech-purple hover:text-bright-pink transition-colors duration-300 font-inter"
