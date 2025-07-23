@@ -3,8 +3,57 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertNewsArticleSchema, insertMetricsSchema, insertPredictionSchema } from "@shared/schema";
 import { MLPredictor } from "./ml-predictor";
+import path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Serve sitemap.xml (dynamic generation)
+  app.get("/sitemap.xml", (req, res) => {
+    res.type("application/xml");
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const currentDate = new Date().toISOString();
+    
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <url>
+    <loc>${baseUrl}/</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/dashboard</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>`;
+    
+    res.send(sitemap);
+  });
+
+  // Serve robots.txt
+  app.get("/robots.txt", (req, res) => {
+    res.type("text/plain");
+    const robotsTxt = `User-agent: *
+Allow: /
+
+Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
+    res.send(robotsTxt);
+  });
+
+  // Serve favicon
+  app.get("/favicon.ico", (req, res) => {
+    res.sendFile(path.resolve(import.meta.dirname, "..", "public", "favicon.svg"));
+  });
+
+  app.get("/favicon.svg", (req, res) => {
+    res.type("image/svg+xml");
+    res.sendFile(path.resolve(import.meta.dirname, "..", "public", "favicon.svg"));
+  });
   // Get latest AI news
   app.get("/api/news", async (req, res) => {
     try {
