@@ -38,7 +38,10 @@ export default function MLPredictionPanel() {
   });
 
   const { mutate: generatePrediction, isPending } = useMutation({
-    mutationFn: () => apiRequest("POST", "/api/predictions/generate"),
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/predictions/generate");
+      return await response.json();
+    },
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["/api/predictions/latest"] });
       toast({
