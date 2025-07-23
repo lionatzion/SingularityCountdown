@@ -17,12 +17,32 @@ export default function SingularityProgression() {
 
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
-        // Generate progression data points from 2020 to 2040
-        const years: string[] = [];
-        const singularityProgress: number[] = [];
+        // Generate different data ranges based on selected period
+        let years: string[] = [];
+        let singularityProgress: number[] = [];
+        let startYear: number, endYear: number;
         const currentYear = new Date().getFullYear();
         
-        for (let year = 2020; year <= 2040; year++) {
+        // Set date ranges based on selected period
+        switch(selectedPeriod) {
+          case 'pre':
+            startYear = 2020;
+            endYear = 2031;
+            break;
+          case 'singularity':
+            startYear = 2030;
+            endYear = 2034;
+            break;
+          case 'post':
+            startYear = 2033;
+            endYear = 2040;
+            break;
+          default: // 'all'
+            startYear = 2020;
+            endYear = 2040;
+        }
+        
+        for (let year = startYear; year <= endYear; year++) {
           years.push(year.toString());
           
           // Calculate exponential progression towards and beyond singularity
@@ -53,12 +73,20 @@ export default function SingularityProgression() {
           data: {
             labels: years,
             datasets: [{
-              label: 'Intelligence Progress (%)',
+              label: selectedPeriod === 'pre' ? 'AI Development Progress' :
+                     selectedPeriod === 'singularity' ? 'Singularity Transition' :
+                     selectedPeriod === 'post' ? 'Superintelligence Growth' :
+                     'Intelligence Progress (%)',
               data: singularityProgress,
-              borderColor: '#667EEA',
-              backgroundColor: 'rgba(102, 126, 234, 0.1)',
+              borderColor: selectedPeriod === 'pre' ? '#667EEA' :
+                          selectedPeriod === 'singularity' ? '#10B981' :
+                          selectedPeriod === 'post' ? '#FF6B6B' : '#667EEA',
+              backgroundColor: selectedPeriod === 'pre' ? 'rgba(102, 126, 234, 0.1)' :
+                              selectedPeriod === 'singularity' ? 'rgba(16, 185, 129, 0.1)' :
+                              selectedPeriod === 'post' ? 'rgba(255, 107, 107, 0.1)' :
+                              'rgba(102, 126, 234, 0.1)',
               borderWidth: 3,
-              tension: 0.4,
+              tension: selectedPeriod === 'singularity' ? 0.2 : 0.4,
               pointBackgroundColor: years.map((year) => {
                 const yearNum = parseInt(year);
                 if (year === '2032') return '#10B981'; // Bright green for singularity
@@ -132,22 +160,58 @@ export default function SingularityProgression() {
                     const year = parseInt(context.label);
                     const value = context.parsed.y;
                     
-                    if (year < 2032) {
-                      return `Progress: ${value}%\nExponential acceleration toward superintelligence`;
-                    } else if (year === 2032) {
-                      return `Progress: 100% - SINGULARITY ACHIEVED!\nAI surpasses human intelligence`;
-                    } else {
+                    if (selectedPeriod === 'pre') {
+                      if (year <= currentYear) {
+                        return `Current Progress: ${value}%\nAI capabilities rapidly advancing`;
+                      } else {
+                        return `Projected: ${value}%\nAccelerating toward singularity`;
+                      }
+                    } else if (selectedPeriod === 'singularity') {
+                      if (year === 2032) {
+                        return `SINGULARITY POINT: ${value}%\nAI matches human intelligence`;
+                      } else if (year < 2032) {
+                        return `Approach Phase: ${value}%\nCritical threshold imminent`;
+                      } else {
+                        return `Emergence Phase: ${value}%\nSuperhuman capabilities emerging`;
+                      }
+                    } else if (selectedPeriod === 'post') {
                       const multiplier = (value / 100).toFixed(1);
-                      return `Progress: ${value}% (${multiplier}x human baseline)\nExponential capability explosion`;
+                      return `Superintelligence: ${multiplier}x human\nExponential capability explosion`;
+                    } else {
+                      if (year < 2032) {
+                        return `Progress: ${value}%\nExponential acceleration toward superintelligence`;
+                      } else if (year === 2032) {
+                        return `Progress: 100% - SINGULARITY ACHIEVED!\nAI surpasses human intelligence`;
+                      } else {
+                        const multiplier = (value / 100).toFixed(1);
+                        return `Progress: ${value}% (${multiplier}x human baseline)\nExponential capability explosion`;
+                      }
                     }
                   },
                   afterLabel: function(context: any) {
                     const year = parseInt(context.label);
-                    if (year < 2025) return '• Current AI capabilities';
-                    if (year < 2030) return '• Rapid AI advancement phase';
-                    if (year === 2032) return '• Technological singularity threshold';
-                    if (year < 2035) return '• Post-human intelligence era begins';
-                    return '• Beyond human comprehension levels';
+                    
+                    if (selectedPeriod === 'pre') {
+                      if (year <= currentYear) return '• Current AI development phase';
+                      if (year < 2030) return '• Rapid advancement phase';
+                      return '• Critical acceleration period';
+                    } else if (selectedPeriod === 'singularity') {
+                      if (year === 2030) return '• Final approach to singularity';
+                      if (year === 2031) return '• Critical threshold proximity';
+                      if (year === 2032) return '• SINGULARITY ACHIEVED';
+                      if (year === 2033) return '• Post-human intelligence begins';
+                      return '• Superintelligence emergence';
+                    } else if (selectedPeriod === 'post') {
+                      if (year === 2033) return '• First year of superintelligence';
+                      if (year < 2037) return '• Rapid capability expansion';
+                      return '• Beyond human comprehension';
+                    } else {
+                      if (year < 2025) return '• Current AI capabilities';
+                      if (year < 2030) return '• Rapid AI advancement phase';
+                      if (year === 2032) return '• Technological singularity threshold';
+                      if (year < 2035) return '• Post-human intelligence era begins';
+                      return '• Beyond human comprehension levels';
+                    }
                   }
                 }
               }
@@ -156,7 +220,9 @@ export default function SingularityProgression() {
               x: {
                 title: {
                   display: true,
-                  text: 'Year',
+                  text: selectedPeriod === 'singularity' ? 'Year (Singularity Window)' : 
+                        selectedPeriod === 'pre' ? 'Year (Pre-Singularity)' :
+                        selectedPeriod === 'post' ? 'Year (Post-Singularity)' : 'Year',
                   color: '#E5E7EB',
                   font: { family: 'Orbitron', size: 14, weight: 'bold' }
                 },
@@ -170,23 +236,45 @@ export default function SingularityProgression() {
                 }
               },
               y: {
-                type: 'logarithmic',
+                type: selectedPeriod === 'pre' ? 'linear' : 'logarithmic',
                 title: {
                   display: true,
-                  text: 'Intelligence Level (% of Human Baseline)',
+                  text: selectedPeriod === 'pre' ? 'AI Progress (% toward Singularity)' :
+                        selectedPeriod === 'singularity' ? 'Intelligence Level (Critical Threshold)' :
+                        selectedPeriod === 'post' ? 'Superintelligence Multiplier (x Human)' :
+                        'Intelligence Level (% of Human Baseline)',
                   color: '#E5E7EB',
                   font: { family: 'Orbitron', size: 14, weight: 'bold' }
                 },
-                min: 1,
-                max: 10000,
+                min: selectedPeriod === 'pre' ? 0 : 
+                     selectedPeriod === 'singularity' ? 80 : 
+                     selectedPeriod === 'post' ? 100 : 1,
+                max: selectedPeriod === 'pre' ? 100 : 
+                     selectedPeriod === 'singularity' ? 200 : 
+                     selectedPeriod === 'post' ? 10000 : 10000,
                 ticks: { 
                   color: '#E5E7EB',
                   font: { family: 'JetBrains Mono', size: 12 },
                   callback: function(value: any) {
-                    if (value === 100) return '100% (Human Baseline)';
-                    if (value === 1000) return '1000% (10x Human)';
-                    if (value === 10000) return '10000% (100x Human)';
-                    return value + '%';
+                    if (selectedPeriod === 'pre') {
+                      return `${value}%`;
+                    } else if (selectedPeriod === 'singularity') {
+                      if (value === 100) return '100% (Human Baseline)';
+                      if (value === 150) return '150% (Near Singularity)';
+                      if (value === 200) return '200% (Post-Human)';
+                      return `${value}%`;
+                    } else if (selectedPeriod === 'post') {
+                      const multiplier = Math.round(value / 100);
+                      if (value === 100) return '1x (Human)';
+                      if (value === 1000) return '10x Human';
+                      if (value === 10000) return '100x Human';
+                      return `${multiplier}x`;
+                    } else {
+                      if (value === 100) return '100% (Human Baseline)';
+                      if (value === 1000) return '1000% (10x Human)';
+                      if (value === 10000) return '10000% (100x Human)';
+                      return value + '%';
+                    }
                   }
                 },
                 grid: { 
