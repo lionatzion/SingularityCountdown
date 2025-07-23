@@ -134,108 +134,111 @@ export default function MLPredictionPanel() {
               <Loader2 className="w-8 h-8 mx-auto animate-spin text-tech-purple mb-4" />
               <p className="text-light-grey/60">Loading ML prediction...</p>
             </div>
-          ) : latestPrediction && typeof latestPrediction === 'object' && 'predictedDate' in latestPrediction ? (
-            <>
-              {/* Main Prediction Display */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-tech-purple/50">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Calendar className="w-5 h-5 text-tech-purple" />
-                    <h3 className="font-inter font-semibold text-white">Predicted Date</h3>
-                  </div>
-                  <div className="text-2xl font-jetbrains font-bold text-white">
-                    {formatDate((latestPrediction as any).predictedDate)}
-                  </div>
-                  <div className="text-xs text-light-grey mt-1">
-                    Model: {(latestPrediction as any).modelVersion}
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-neon-green/50">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Target className="w-5 h-5 text-neon-green" />
-                    <h3 className="font-inter font-semibold text-white">Confidence Score</h3>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="text-2xl font-jetbrains font-bold text-neon-green">
-                      {(latestPrediction as any).confidenceScore}%
+          ) : latestPrediction && typeof latestPrediction === 'object' && 'predictedDate' in latestPrediction ? (() => {
+            const prediction = latestPrediction as Prediction;
+            return (
+              <>
+                {/* Main Prediction Display */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-tech-purple/50">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Calendar className="w-5 h-5 text-tech-purple" />
+                      <h3 className="font-inter font-semibold text-white">Predicted Date</h3>
                     </div>
-                    <Progress 
-                      value={(latestPrediction as any).confidenceScore} 
-                      className="h-2"
-                    />
+                    <div className="text-2xl font-jetbrains font-bold text-white">
+                      {formatDate(prediction.predictedDate)}
+                    </div>
+                    <div className="text-xs text-light-grey mt-1">
+                      Model: {prediction.modelVersion}
+                    </div>
                   </div>
-                </div>
 
-                <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-bright-pink/50">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Brain className="w-5 h-5 text-bright-pink" />
-                    <h3 className="font-inter font-semibold text-white">Analysis Factors</h3>
-                  </div>
-                  <div className="text-lg font-jetbrains font-bold text-white mb-2">
-                    {(latestPrediction as any).analysisFactors?.length || 0} Key Factors
-                  </div>
-                  <div className="text-xs text-light-grey">
-                    Generated {new Date((latestPrediction as any).createdAt).toLocaleDateString()}
-                  </div>
-                </div>
-              </div>
-
-              {/* Analysis Factors */}
-              <div>
-                <h3 className="text-lg font-inter font-semibold text-white mb-3">Key Analysis Factors</h3>
-                <div className="flex flex-wrap gap-2">
-                  {((latestPrediction as any).analysisFactors || []).map((factor: string, index: number) => (
-                    <Badge 
-                      key={index} 
-                      variant="secondary" 
-                      className="bg-slate-800/50 text-white border-slate-600/50 hover:bg-slate-700/50"
-                    >
-                      {factor}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Trend Analysis */}
-              {(latestPrediction as any).trendData && (
-                <div>
-                  <h3 className="text-lg font-inter font-semibold text-white mb-3">Trend Analysis</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                    {Object.entries(parseTrendData((latestPrediction as any).trendData)).map(([key, value]) => (
-                      <div key={key} className="bg-slate-800/50 rounded-lg p-3 border border-slate-600/50">
-                        <div className="text-sm text-light-grey mb-1 capitalize">
-                          {key.replace(/([A-Z])/g, ' $1').trim()}
-                        </div>
-                        <div className="text-lg font-jetbrains font-bold text-white">
-                          {typeof value === 'number' ? `${(value * 100).toFixed(1)}%` : String(value)}
-                        </div>
+                  <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-neon-green/50">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Target className="w-5 h-5 text-neon-green" />
+                      <h3 className="font-inter font-semibold text-white">Confidence Score</h3>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="text-2xl font-jetbrains font-bold text-neon-green">
+                        {prediction.confidenceScore}%
                       </div>
+                      <Progress 
+                        value={prediction.confidenceScore} 
+                        className="h-2"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-bright-pink/50">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Brain className="w-5 h-5 text-bright-pink" />
+                      <h3 className="font-inter font-semibold text-white">Analysis Factors</h3>
+                    </div>
+                    <div className="text-lg font-jetbrains font-bold text-white mb-2">
+                      {prediction.analysisFactors?.length || 0} Key Factors
+                    </div>
+                    <div className="text-xs text-light-grey">
+                      Generated {new Date(prediction.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Analysis Factors */}
+                <div>
+                  <h3 className="text-lg font-inter font-semibold text-white mb-3">Key Analysis Factors</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {(prediction.analysisFactors || []).map((factor: string, index: number) => (
+                      <Badge 
+                        key={index} 
+                        variant="secondary" 
+                        className="bg-slate-800/50 text-white border-slate-600/50 hover:bg-slate-700/50"
+                      >
+                        {factor}
+                      </Badge>
                     ))}
                   </div>
                 </div>
-              )}
 
-              {/* Detailed Analysis */}
-              <div>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowAnalysis(!showAnalysis)}
-                  className="mb-3 border-slate-600/50 text-white hover:bg-slate-800/50 hover:text-white"
-                >
-                  {showAnalysis ? 'Hide' : 'Show'} Detailed Analysis
-                </Button>
-                
-                {showAnalysis && (
-                  <div className="bg-slate-800/30 rounded-lg p-6 border border-slate-600/30">
-                    <div className="text-sm text-white leading-relaxed whitespace-pre-wrap font-inter">
-                      {(latestPrediction as any).rawAnalysis}
+                {/* Trend Analysis */}
+                {prediction.trendData && (
+                  <div>
+                    <h3 className="text-lg font-inter font-semibold text-white mb-3">Trend Analysis</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                      {Object.entries(parseTrendData(prediction.trendData)).map(([key, value]) => (
+                        <div key={key} className="bg-slate-800/50 rounded-lg p-3 border border-slate-600/50">
+                          <div className="text-sm text-light-grey mb-1 capitalize">
+                            {key.replace(/([A-Z])/g, ' $1').trim()}
+                          </div>
+                          <div className="text-lg font-jetbrains font-bold text-white">
+                            {typeof value === 'number' ? `${(value * 100).toFixed(1)}%` : String(value)}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
-              </div>
-            </>
-          ) : (
+
+                {/* Detailed Analysis */}
+                <div>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowAnalysis(!showAnalysis)}
+                    className="mb-3 border-slate-600/50 text-white hover:bg-slate-800/50 hover:text-white"
+                  >
+                    {showAnalysis ? 'Hide' : 'Show'} Detailed Analysis
+                  </Button>
+                  
+                  {showAnalysis && (
+                    <div className="bg-slate-800/30 rounded-lg p-6 border border-slate-600/30">
+                      <div className="text-sm text-white leading-relaxed whitespace-pre-wrap font-inter">
+                        {prediction.rawAnalysis}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            );
+          })() : (
             <div className="text-center py-8">
               <Brain className="w-12 h-12 mx-auto text-bright-pink mb-4" />
               <h3 className="text-lg font-inter font-semibold text-white mb-2">
