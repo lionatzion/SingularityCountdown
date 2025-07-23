@@ -61,8 +61,8 @@ export default function SingularityProgression() {
             const yearsPastSingularity = year - 2032;
             // Exponential growth beyond human comprehension levels
             progress = 100 * Math.pow(2, yearsPastSingularity * 1.5); // Doubling every ~0.67 years
-            // Cap at reasonable chart limits for visualization
-            progress = Math.min(progress, 10000);
+            // Cap at higher limits for better visualization of exponential growth
+            progress = Math.min(progress, selectedPeriod === 'post' ? 100000 : 10000);
           }
           
           singularityProgress.push(Math.round(progress * 10) / 10);
@@ -175,8 +175,13 @@ export default function SingularityProgression() {
                         return `Emergence Phase: ${value}%\nSuperhuman capabilities emerging`;
                       }
                     } else if (selectedPeriod === 'post') {
-                      const multiplier = (value / 100).toFixed(1);
-                      return `Superintelligence: ${multiplier}x human\nExponential capability explosion`;
+                      const multiplier = Math.round(value / 100);
+                      if (multiplier >= 1000) {
+                        const kMultiplier = (multiplier / 1000).toFixed(1);
+                        return `Superintelligence: ${kMultiplier}k x human\nBeyond comprehension scale`;
+                      } else {
+                        return `Superintelligence: ${multiplier}x human\nExponential capability explosion`;
+                      }
                     } else {
                       if (year < 2032) {
                         return `Progress: ${value}%\nExponential acceleration toward superintelligence`;
@@ -250,8 +255,8 @@ export default function SingularityProgression() {
                      selectedPeriod === 'singularity' ? 80 : 
                      selectedPeriod === 'post' ? 100 : 1,
                 max: selectedPeriod === 'pre' ? 100 : 
-                     selectedPeriod === 'singularity' ? 200 : 
-                     selectedPeriod === 'post' ? 10000 : 10000,
+                     selectedPeriod === 'singularity' ? 1000 : 
+                     selectedPeriod === 'post' ? 100000 : 10000,
                 ticks: { 
                   color: '#E5E7EB',
                   font: { family: 'JetBrains Mono', size: 12 },
@@ -260,15 +265,18 @@ export default function SingularityProgression() {
                       return `${value}%`;
                     } else if (selectedPeriod === 'singularity') {
                       if (value === 100) return '100% (Human Baseline)';
-                      if (value === 150) return '150% (Near Singularity)';
-                      if (value === 200) return '200% (Post-Human)';
+                      if (value === 200) return '200% (2x Human)';
+                      if (value === 500) return '500% (5x Human)';
+                      if (value === 1000) return '1000% (10x Human)';
                       return `${value}%`;
                     } else if (selectedPeriod === 'post') {
                       const multiplier = Math.round(value / 100);
                       if (value === 100) return '1x (Human)';
                       if (value === 1000) return '10x Human';
                       if (value === 10000) return '100x Human';
-                      return `${multiplier}x`;
+                      if (value === 100000) return '1000x Human';
+                      if (multiplier >= 1000) return `${(multiplier/1000).toFixed(0)}k x Human`;
+                      return `${multiplier}x Human`;
                     } else {
                       if (value === 100) return '100% (Human Baseline)';
                       if (value === 1000) return '1000% (10x Human)';
