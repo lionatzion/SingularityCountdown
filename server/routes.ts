@@ -224,7 +224,7 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       
       // Store the prediction
       const predictionData = {
-        modelVersion: "v1.0-gpt4o",
+        modelVersion: "v1.0-gpt5",
         predictedDate: analysis.predictedDate,
         confidenceScore: analysis.confidenceScore,
         analysisFactors: analysis.analysisFactors,

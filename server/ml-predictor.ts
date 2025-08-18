@@ -72,7 +72,7 @@ Respond with JSON in this exact format:
 }`;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-5",
       messages: [
         {
           role: "system",
@@ -150,7 +150,7 @@ ${newsText}
 Summarize the key technological developments, breakthroughs, and trends that would impact AI capability growth and singularity timeline prediction.`;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-5",
       messages: [
         {
           role: "system",
