@@ -20,7 +20,7 @@ interface ArtificialAnalysisResponse {
 
 export class ArtificialAnalysisService {
   private apiKey: string;
-  private baseUrl = "https://api.artificialanalysis.ai";
+  private baseUrl = "https://artificialanalysis.ai";
 
   constructor() {
     this.apiKey = process.env.ARTIFICIAL_ANALYSIS_API_KEY || "";
@@ -44,9 +44,9 @@ export class ArtificialAnalysisService {
         return cachedModels;
       }
 
-      const response = await fetch(`${this.baseUrl}/models`, {
+      const response = await fetch(`${this.baseUrl}/api/v2/data/llms/models`, {
         headers: {
-          "Authorization": `Bearer ${this.apiKey}`,
+          "x-api-key": this.apiKey,
           "Content-Type": "application/json",
         },
       });
