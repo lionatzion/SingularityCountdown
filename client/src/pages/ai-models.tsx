@@ -331,7 +331,7 @@ export default function AIModels() {
                 <div className="text-white">Loading frontier models...</div>
               </div>
             )}
-            
+
             {modelsError && (
               <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-4 mb-6">
                 <div className="text-red-400 font-medium">Failed to load real-time data</div>
@@ -393,7 +393,7 @@ export default function AIModels() {
                         ))}
                       </div>
                     </div>
-                    
+
                     {model.pricing && (
                       <div className="grid grid-cols-2 gap-3 text-xs">
                         {model.pricing.inputPrice && (
@@ -410,7 +410,7 @@ export default function AIModels() {
                         )}
                       </div>
                     )}
-                    
+
                     {model.performance && (
                       <div className="grid grid-cols-2 gap-3 text-xs">
                         {model.performance.speed && (

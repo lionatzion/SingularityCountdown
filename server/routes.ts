@@ -12,7 +12,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.type("application/xml");
     const baseUrl = `${req.protocol}://${req.get('host')}`;
     const currentDate = new Date().toISOString();
-    
+
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
@@ -38,7 +38,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     <priority>0.8</priority>
   </url>
 </urlset>`;
-    
+
     res.send(sitemap);
   });
 
@@ -119,7 +119,7 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
   app.post("/api/news/fetch", async (req, res) => {
     try {
       const NEWS_API_KEY = process.env.NEWS_API_KEY || process.env.VITE_NEWS_API_KEY;
-      
+
       if (!NEWS_API_KEY) {
         res.status(500).json({ message: "News API key not configured" });
         return;
@@ -165,7 +165,7 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       // Process and store articles
       const processedArticles = [];
       const skippedDuplicates = [];
-      
+
       for (const article of articles.slice(0, 10)) {
         if (article.title && article.description && article.source?.name) {
           const newsArticle = {
@@ -199,7 +199,7 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       const message = processedArticles.length > 0 
         ? `Fetched and stored ${processedArticles.length} new articles` 
         : "No new articles found (all were duplicates)";
-      
+
       res.json({ 
         message, 
         newArticles: processedArticles.length,
@@ -299,7 +299,7 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
             performance: { speed: 50, latency: 3.0, contextLength: 128000, throughput: 3000 }
           }
         ];
-        
+
         res.json(fallbackModels);
         return;
       }
@@ -307,11 +307,11 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       const artificialAnalysis = new ArtificialAnalysisService();
       const apiModels = await artificialAnalysis.getModels();
       const frontierModels = artificialAnalysis.transformToFrontierModels(apiModels);
-      
+
       res.json(frontierModels);
     } catch (error: any) {
       console.error("Error fetching frontier models:", error);
-      
+
       // Return fallback data on error
       const fallbackModels = [
         {
@@ -325,8 +325,42 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
           pricing: { inputPrice: 0.010, outputPrice: 0.030 }
         }
       ];
-      
+
       res.json(fallbackModels);
+    }
+  });
+
+  // AI Models endpoint
+  app.get("/api/ai-models", async (req, res) => {
+    try {
+      const artificialAnalysis = new ArtificialAnalysisService();
+      const models = await artificialAnalysis.getFrontierModels();
+      res.json(models);
+    } catch (error: any) {
+      console.error("Error fetching AI models:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch AI models",
+        error: error.message 
+      });
+    }
+  });
+
+  // Test AI API connection
+  app.get("/api/test-ai-api", async (req, res) => {
+    try {
+      const artificialAnalysis = new ArtificialAnalysisService();
+      const models = await artificialAnalysis.getModels();
+      res.json({ 
+        success: true, 
+        modelCount: models.length,
+        sampleModel: models[0] || null 
+      });
+    } catch (error: any) {
+      console.error("API test failed:", error);
+      res.status(500).json({ 
+        success: false,
+        error: error.message 
+      });
     }
   });
 
@@ -342,14 +376,14 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       }
 
       const predictor = new MLPredictor();
-      
+
       // Get all available data for analysis
       const allMetrics = await storage.getAllMetrics();
       const recentNews = await storage.getLatestNews(20);
-      
+
       // Generate ML prediction
       const analysis = await predictor.analyzeSingularityPrediction(allMetrics, recentNews);
-      
+
       // Store the prediction
       const predictionData = {
         modelVersion: "v1.0-gpt5",
@@ -367,17 +401,17 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       }
 
       const storedPrediction = await storage.createPrediction(validation.data);
-      
+
       res.json({
         prediction: storedPrediction,
         analysis: analysis
       });
     } catch (error: any) {
       console.error("Error generating prediction:", error);
-      
+
       let errorMessage = "Failed to generate prediction";
       let statusCode = 500;
-      
+
       // Handle OpenAI API specific errors
       if (error?.status === 401 || error?.message?.includes("API key")) {
         errorMessage = "OpenAI API key is invalid or not configured";
@@ -388,7 +422,7 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       } else if (error?.message) {
         errorMessage = error.message;
       }
-      
+
       res.status(statusCode).json({ message: errorMessage });
     }
   });
