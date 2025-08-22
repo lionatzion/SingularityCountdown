@@ -100,6 +100,18 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
     res.type("image/svg+xml");
     res.sendFile(path.resolve(import.meta.dirname, "..", "public", "favicon.svg"));
   });
+  // Get frontier models data
+  app.get("/api/frontier-models", async (req, res) => {
+    try {
+      const artificialAnalysis = new ArtificialAnalysis();
+      const models = await artificialAnalysis.getFrontierModels();
+      res.json(models);
+    } catch (error) {
+      console.error("Failed to fetch frontier models:", error);
+      res.status(500).json({ message: "Failed to fetch frontier models" });
+    }
+  });
+
   // Get latest AI news
   app.get("/api/news", async (req, res) => {
     try {
