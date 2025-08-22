@@ -69,14 +69,14 @@ export default function Dashboard() {
                       <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <div className="grid gap-3 p-4 w-[200px]">
+                      <div className="grid gap-3 p-4 w-[200px] bg-dark-space border border-gray-800">
                         <NavigationMenuLink asChild>
                           <a
                             href="/ai-models"
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
                           >
-                            <div className="text-sm font-medium leading-none">AI Models</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            <div className="text-sm font-orbitron font-medium leading-none text-white">AI Models</div>
+                            <p className="line-clamp-2 text-xs leading-snug text-light-grey/70 font-orbitron">
                               Explore frontier AI models and their capabilities
                             </p>
                           </a>
