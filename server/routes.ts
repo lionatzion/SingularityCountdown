@@ -149,9 +149,14 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
 
       lastFetchTime = now;
 
-      const response = await fetch(
-        `https://newsapi.org/v2/everything?q=artificial+intelligence+OR+machine+learning+OR+GPU+OR+neural+networks&sortBy=publishedAt&language=en&pageSize=20&apiKey=${NEWS_API_KEY}`
-      );
+      const response = await Promise.race([
+        fetch(
+          `https://newsapi.org/v2/everything?q=artificial+intelligence+OR+machine+learning+OR+GPU+OR+neural+networks&sortBy=publishedAt&language=en&pageSize=20&apiKey=${NEWS_API_KEY}`
+        ),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Request timeout')), 10000)
+        )
+      ]) as Response;
 
       if (!response.ok) {
         if (response.status === 429) {
@@ -159,6 +164,17 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
           const existingArticles = await storage.getLatestNews(10);
           res.json({
             message: "Rate limited - using existing articles",
+            articlesStored: 0,
+            duplicatesSkipped: 0,
+            articles: existingArticles
+          });
+          return;
+        }
+        if (response.status === 401) {
+          // Invalid API key - return existing articles
+          const existingArticles = await storage.getLatestNews(10);
+          res.json({
+            message: "API key invalid - using cached articles",
             articlesStored: 0,
             duplicatesSkipped: 0,
             articles: existingArticles
@@ -215,9 +231,25 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
         duplicatesSkipped: skippedDuplicates.length,
         articles: processedArticles
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching news:", error);
-      res.status(500).json({ message: "Failed to fetch external news" });
+      
+      // Return existing articles instead of error to prevent frontend crashes
+      try {
+        const existingArticles = await storage.getLatestNews(10);
+        res.json({
+          message: `News fetch failed: ${error.message} - using cached articles`,
+          articlesStored: 0,
+          duplicatesSkipped: 0,
+          articles: existingArticles,
+          error: error.message
+        });
+      } catch (storageError) {
+        res.status(500).json({ 
+          message: "Failed to fetch external news and no cached articles available",
+          error: error.message 
+        });
+      }
     }
   });
 
