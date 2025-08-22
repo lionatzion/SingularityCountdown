@@ -44,6 +44,9 @@ export class ArtificialAnalysisService {
         return cachedModels;
       }
 
+      console.log("Making API request to:", `${this.baseUrl}/api/v2/data/llms/models`);
+      console.log("API key present:", !!this.apiKey);
+      
       const response = await fetch(`${this.baseUrl}/api/v2/data/llms/models`, {
         headers: {
           "x-api-key": this.apiKey,
@@ -51,8 +54,12 @@ export class ArtificialAnalysisService {
         },
       });
 
+      console.log("API response status:", response.status);
+      
       if (!response.ok) {
-        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+        const errorText = await response.text();
+        console.error("API error response:", errorText);
+        throw new Error(`API request failed: ${response.status} ${response.statusText} - ${errorText}`);
       }
 
       const data: ArtificialAnalysisResponse = await response.json();
