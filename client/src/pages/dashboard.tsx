@@ -8,6 +8,15 @@ import NewsFeed from "@/components/news-feed";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { ChevronDown } from "lucide-react";
 
 export default function Dashboard() {
   const { toast } = useToast();
@@ -52,15 +61,33 @@ export default function Dashboard() {
               <div className="w-8 h-8 bg-gradient-to-r from-tech-purple to-bright-pink rounded-lg flex items-center justify-center">
                 <span className="text-white font-orbitron font-bold text-sm">Ω</span>
               </div>
-              <h1 className="text-xl font-orbitron font-bold text-white">Singularity Predictor</h1>
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="bg-transparent hover:bg-transparent text-xl font-orbitron font-bold text-white data-[state=open]:bg-transparent">
+                      Singularity Predictor
+                      <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="grid gap-3 p-4 w-[200px]">
+                        <NavigationMenuLink asChild>
+                          <a
+                            href="/ai-models"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          >
+                            <div className="text-sm font-medium leading-none">AI Models</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Explore frontier AI models and their capabilities
+                            </p>
+                          </a>
+                        </NavigationMenuLink>
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </div>
             <div className="flex items-center space-x-4">
-              <a 
-                href="/ai-models" 
-                className="text-sm font-inter text-light-grey/70 hover:text-tech-purple transition-colors duration-300"
-              >
-                AI Models
-              </a>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-neon-green rounded-full pulse-ring"></div>
                 <span className="text-sm font-jetbrains text-neon-green">LIVE</span>
