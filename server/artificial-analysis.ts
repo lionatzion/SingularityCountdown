@@ -24,9 +24,15 @@ export class ArtificialAnalysisService {
 
   constructor() {
     this.apiKey = process.env.ARTIFICIAL_ANALYSIS_API_KEY || "";
-    if (!this.apiKey) {
-      throw new Error("ARTIFICIAL_ANALYSIS_API_KEY environment variable is required");
-    }
+  }
+
+  async getFrontierModels() {
+    const models = await this.getModels();
+    return this.transformToFrontierModels(models);
+  }
+
+  async getCachedModels() {
+    return await this.getFrontierModels();
   }
 
   async getModels(): Promise<ArtificialAnalysisModel[]> {
