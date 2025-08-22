@@ -22,14 +22,8 @@ import { ChevronDown } from "lucide-react";
 export default function Dashboard() {
   const { toast } = useToast();
 
-  // Query news data
-  const newsQuery = useQuery({
-    queryKey: ["/api/news"],
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
-
   // Fetch latest news on component mount
-  const { mutate: fetchNews, isPending: newsFetching } = useMutation({
+  const { mutate: fetchNews } = useMutation({
     mutationFn: () => apiRequest("POST", "/api/news/fetch"),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/news"] });
@@ -38,33 +32,25 @@ export default function Dashboard() {
         description: "Latest AI news has been fetched successfully",
       });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to fetch news:", error);
-      // Only show error toast if it's not an API key or network issue
-      if (!error?.message?.includes('News API key') && !error?.message?.includes('network') && !error?.message?.includes('timeout')) {
-        toast({
-          title: "News Fetch Failed",
-          description: "Using cached news data instead",
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "News Fetch Failed",
+        description: "Unable to fetch latest AI news",
+        variant: "destructive",
+      });
     },
   });
 
   // Auto-fetch news on component mount and every 30 minutes
   useEffect(() => {
-    // Only fetch if not already loading to prevent race conditions
-    if (!newsQuery.isLoading && !newsFetching) {
-      fetchNews();
-    }
+    fetchNews();
     const interval = setInterval(() => {
-      if (!newsQuery.isLoading && !newsFetching) {
-        fetchNews();
-      }
+      fetchNews();
     }, 30 * 60 * 1000); // 30 minutes
 
     return () => clearInterval(interval);
-  }, [fetchNews, newsQuery.isLoading, newsFetching]);
+  }, [fetchNews]);
 
   return (
     <div className="min-h-screen bg-dark-space text-light-grey">

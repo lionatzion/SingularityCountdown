@@ -35,7 +35,7 @@ app.use((req, res, next) => {
   next();
 });
 
-async function startServer() {
+(async () => {
   // Run migrations on startup to ensure database tables exist
   try {
     await migrate();
@@ -51,6 +51,10 @@ async function startServer() {
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
+    // Re-throwing the error might be necessary for other error handlers,
+    // but for a simple express server, it might cause unhandled rejection.
+    // Consider carefully if this re-throw is needed.
+    // throw err;
   });
 
   // importantly only setup vite in development and after
@@ -66,20 +70,11 @@ async function startServer() {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = 5000;
-  
-  return new Promise<void>((resolve, reject) => {
-    server.listen(port, "0.0.0.0", (err?: Error) => {
-      if (err) {
-        reject(err);
-      } else {
-        log(`serving on port ${port}`);
-        resolve();
-      }
-    });
+  server.listen({
+    port,
+    host: "0.0.0.0",
+    reusePort: true,
+  }, () => {
+    log(`serving on port ${port}`);
   });
-}
-
-startServer().catch(error => {
-  console.error("Failed to start server:", error);
-  process.exit(1);
-});
+})();

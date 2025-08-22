@@ -9,8 +9,8 @@ import path from "path";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint for deployment
   app.get("/", (req, res) => {
-    res.status(200).json({
-      status: "ok",
+    res.status(200).json({ 
+      status: "ok", 
       message: "AI Singularity Tracker API is running",
       timestamp: new Date().toISOString()
     });
@@ -138,46 +138,30 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       if (now - lastFetchTime < FETCH_COOLDOWN) {
         // Return existing articles if within cooldown period
         const existingArticles = await storage.getLatestNews(10);
-        res.json({
-          message: "Using cached articles (rate limit protection)",
+        res.json({ 
+          message: "Using cached articles (rate limit protection)", 
           articlesStored: 0,
           duplicatesSkipped: 0,
-          articles: existingArticles
+          articles: existingArticles 
         });
         return;
       }
 
       lastFetchTime = now;
 
-      const response = await Promise.race([
-        fetch(
-          `https://newsapi.org/v2/everything?q=artificial+intelligence+OR+machine+learning+OR+GPU+OR+neural+networks&sortBy=publishedAt&language=en&pageSize=20&apiKey=${NEWS_API_KEY}`
-        ),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Request timeout')), 10000)
-        )
-      ]) as Response;
+      const response = await fetch(
+        `https://newsapi.org/v2/everything?q=artificial+intelligence+OR+machine+learning+OR+GPU+OR+neural+networks&sortBy=publishedAt&language=en&pageSize=20&apiKey=${NEWS_API_KEY}`
+      );
 
       if (!response.ok) {
         if (response.status === 429) {
           // Rate limited - return existing articles
           const existingArticles = await storage.getLatestNews(10);
-          res.json({
-            message: "Rate limited - using existing articles",
+          res.json({ 
+            message: "Rate limited - using existing articles", 
             articlesStored: 0,
             duplicatesSkipped: 0,
-            articles: existingArticles
-          });
-          return;
-        }
-        if (response.status === 401) {
-          // Invalid API key - return existing articles
-          const existingArticles = await storage.getLatestNews(10);
-          res.json({
-            message: "API key invalid - using cached articles",
-            articlesStored: 0,
-            duplicatesSkipped: 0,
-            articles: existingArticles
+            articles: existingArticles 
           });
           return;
         }
@@ -221,35 +205,19 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
         }
       }
 
-      const message = processedArticles.length > 0
-        ? `Fetched and stored ${processedArticles.length} new articles`
+      const message = processedArticles.length > 0 
+        ? `Fetched and stored ${processedArticles.length} new articles` 
         : "No new articles found (all were duplicates)";
 
-      res.json({
-        message,
+      res.json({ 
+        message, 
         newArticles: processedArticles.length,
         duplicatesSkipped: skippedDuplicates.length,
-        articles: processedArticles
+        articles: processedArticles 
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error fetching news:", error);
-      
-      // Return existing articles instead of error to prevent frontend crashes
-      try {
-        const existingArticles = await storage.getLatestNews(10);
-        res.json({
-          message: `News fetch failed: ${error.message} - using cached articles`,
-          articlesStored: 0,
-          duplicatesSkipped: 0,
-          articles: existingArticles,
-          error: error.message
-        });
-      } catch (storageError) {
-        res.status(500).json({ 
-          message: "Failed to fetch external news and no cached articles available",
-          error: error.message 
-        });
-      }
+      res.status(500).json({ message: "Failed to fetch external news" });
     }
   });
 
@@ -368,7 +336,7 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       const fallbackModels = [
         {
           name: "GPT-5",
-          company: "OpenAI",
+          company: "OpenAI", 
           releaseDate: "2025-01-15",
           singularityProximity: 87,
           capabilities: ["Advanced Reasoning", "Multimodal", "Code Generation", "Scientific Research"],
@@ -390,9 +358,9 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       res.json(models);
     } catch (error: any) {
       console.error("Error fetching AI models:", error);
-      res.status(500).json({
+      res.status(500).json({ 
         message: "Failed to fetch AI models",
-        error: error.message
+        error: error.message 
       });
     }
   });
@@ -402,16 +370,16 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
     try {
       const artificialAnalysis = new ArtificialAnalysisService();
       const models = await artificialAnalysis.getModels();
-      res.json({
-        success: true,
+      res.json({ 
+        success: true, 
         modelCount: models.length,
-        sampleModel: models[0] || null
+        sampleModel: models[0] || null 
       });
     } catch (error: any) {
       console.error("API test failed:", error);
-      res.status(500).json({
+      res.status(500).json({ 
         success: false,
-        error: error.message
+        error: error.message 
       });
     }
   });
@@ -421,8 +389,8 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
     try {
       // Check if OpenAI API key is configured
       if (!process.env.OPENAI_API_KEY) {
-        res.status(500).json({
-          message: "OpenAI API key is not configured. Please set the OPENAI_API_KEY environment variable."
+        res.status(500).json({ 
+          message: "OpenAI API key is not configured. Please set the OPENAI_API_KEY environment variable." 
         });
         return;
       }
@@ -496,8 +464,6 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
     }
   });
 
-  // End of registerRoutes function
-  // Create and return the HTTP server
   const httpServer = createServer(app);
   return httpServer;
 }
