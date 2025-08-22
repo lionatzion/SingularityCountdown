@@ -58,7 +58,10 @@ export default function AIModels() {
   // Fetch real frontier models data
   const { data: frontierModels = [], isLoading: modelsLoading, error: modelsError } = useQuery({
     queryKey: ["frontier-models"],
-    queryFn: () => apiRequest("/api/frontier-models"),
+    queryFn: async () => {
+      const response = await apiRequest("GET", "/api/frontier-models");
+      return response.json();
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
