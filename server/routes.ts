@@ -31,6 +31,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>${baseUrl}/ai-models</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>`;
     
     res.send(sitemap);
@@ -39,7 +45,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve robots.txt
   app.get("/robots.txt", (req, res) => {
     res.type("text/plain");
-    const robotsTxt = `User-agent: *
+    const robotsTxt = `# Block AI training bots except Google Search
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Bard
+Disallow: /
+
+User-agent: BingBot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+# Allow Google Search bot
+User-agent: Googlebot
+Allow: /
+
+# Allow all other crawlers by default
+User-agent: *
 Allow: /
 
 Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
