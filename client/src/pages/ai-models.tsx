@@ -21,6 +21,17 @@ interface FrontierModel {
     multimodal: number;
   };
   status: "active" | "preview" | "deprecated";
+  pricing?: {
+    inputPrice?: number;
+    outputPrice?: number;
+  };
+  performance?: {
+    speed?: number;
+    latency?: number;
+    contextLength?: number;
+    throughput?: number;
+  };
+  qualityScore?: number;
 }
 
 interface MicroEval {
@@ -44,7 +55,15 @@ interface MCPServer {
 export default function AIModels() {
   const [, setLocation] = useLocation();
 
-  const frontierModels: FrontierModel[] = [
+  // Fetch real frontier models data
+  const { data: frontierModels = [], isLoading: modelsLoading, error: modelsError } = useQuery({
+    queryKey: ["frontier-models"],
+    queryFn: () => apiRequest("/api/frontier-models"),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Fallback data in case API fails
+  const fallbackModels: FrontierModel[] = [
     {
       name: "GPT-5",
       company: "OpenAI",
@@ -307,8 +326,21 @@ export default function AIModels() {
               </p>
             </div>
 
+            {modelsLoading && (
+              <div className="text-center py-8">
+                <div className="text-white">Loading frontier models...</div>
+              </div>
+            )}
+            
+            {modelsError && (
+              <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-4 mb-6">
+                <div className="text-red-400 font-medium">Failed to load real-time data</div>
+                <div className="text-red-300 text-sm">Using fallback data instead</div>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {frontierModels.map((model, index) => (
+              {(frontierModels.length > 0 ? frontierModels : fallbackModels).map((model, index) => (
                 <Card key={index} className="bg-slate-900/50 border-slate-700/50 p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
@@ -350,15 +382,51 @@ export default function AIModels() {
                     ))}
                   </div>
 
-                  <div>
-                    <p className="text-sm text-light-grey/70 mb-2">Key Capabilities:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {model.capabilities.map((capability, i) => (
-                        <Badge key={i} variant="outline" className="border-tech-purple/50 text-tech-purple">
-                          {capability}
-                        </Badge>
-                      ))}
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm text-light-grey/70 mb-2">Key Capabilities:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {model.capabilities.map((capability, i) => (
+                          <Badge key={i} variant="outline" className="border-tech-purple/50 text-tech-purple">
+                            {capability}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
+                    
+                    {model.pricing && (
+                      <div className="grid grid-cols-2 gap-3 text-xs">
+                        {model.pricing.inputPrice && (
+                          <div>
+                            <span className="text-light-grey/70">Input:</span>
+                            <span className="text-white ml-1">${model.pricing.inputPrice.toFixed(3)}/1K</span>
+                          </div>
+                        )}
+                        {model.pricing.outputPrice && (
+                          <div>
+                            <span className="text-light-grey/70">Output:</span>
+                            <span className="text-white ml-1">${model.pricing.outputPrice.toFixed(3)}/1K</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {model.performance && (
+                      <div className="grid grid-cols-2 gap-3 text-xs">
+                        {model.performance.speed && (
+                          <div>
+                            <span className="text-light-grey/70">Speed:</span>
+                            <span className="text-bright-pink ml-1">{model.performance.speed.toFixed(0)} tok/s</span>
+                          </div>
+                        )}
+                        {model.performance.latency && (
+                          <div>
+                            <span className="text-light-grey/70">Latency:</span>
+                            <span className="text-bright-pink ml-1">{model.performance.latency.toFixed(2)}s</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </Card>
               ))}

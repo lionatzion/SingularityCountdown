@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertNewsArticleSchema, insertMetricsSchema, insertPredictionSchema } from "@shared/schema";
 import { MLPredictor } from "./ml-predictor";
+import { ArtificialAnalysisService } from "./artificial-analysis";
 import path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -199,6 +200,41 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       res.json(prediction);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch prediction" });
+    }
+  });
+
+  // Get frontier models from Artificial Analysis API
+  app.get("/api/frontier-models", async (req, res) => {
+    try {
+      if (!process.env.ARTIFICIAL_ANALYSIS_API_KEY) {
+        res.status(500).json({ 
+          message: "Artificial Analysis API key is not configured. Please set the ARTIFICIAL_ANALYSIS_API_KEY environment variable." 
+        });
+        return;
+      }
+
+      const artificialAnalysis = new ArtificialAnalysisService();
+      const rawModels = await artificialAnalysis.getModels();
+      const frontierModels = artificialAnalysis.transformToFrontierModels(rawModels);
+      
+      res.json(frontierModels);
+    } catch (error: any) {
+      console.error("Error fetching frontier models:", error);
+      
+      let errorMessage = "Failed to fetch frontier models";
+      let statusCode = 500;
+      
+      if (error?.message?.includes("API key")) {
+        errorMessage = "Artificial Analysis API key is invalid or not configured";
+        statusCode = 401;
+      } else if (error?.message?.includes("429")) {
+        errorMessage = "API rate limit exceeded";
+        statusCode = 429;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+      
+      res.status(statusCode).json({ message: errorMessage });
     }
   });
 
