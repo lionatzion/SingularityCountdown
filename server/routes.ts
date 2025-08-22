@@ -7,15 +7,6 @@ import { ArtificialAnalysisService } from "./artificial-analysis";
 import path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Health check endpoint for deployment
-  app.get("/", (req, res) => {
-    res.status(200).json({ 
-      status: "ok", 
-      message: "AI Singularity Tracker API is running",
-      timestamp: new Date().toISOString()
-    });
-  });
-
   // Serve sitemap.xml (dynamic generation)
   app.get("/sitemap.xml", (req, res) => {
     res.type("application/xml");

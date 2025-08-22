@@ -1,6 +1,5 @@
 import { db } from "./db";
 import { newsArticles, metrics, predictions, frontierModels } from "@shared/schema";
-import { log } from "./vite";
 
 async function migrate() {
   try {
