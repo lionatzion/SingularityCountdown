@@ -5,6 +5,7 @@ import MLPredictionPanel from "@/components/ml-prediction-panel";
 import MetricsGrid from "@/components/metrics-grid";
 import ChartsSection from "@/components/charts-section";
 import NewsFeed from "@/components/news-feed";
+import NewsletterSignup from "@/components/newsletter-signup";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -73,7 +74,7 @@ export default function Dashboard() {
                         <NavigationMenuLink asChild>
                           <a
                             href="/ai-models"
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none outline-none transition-colors hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
                           >
                             <div className="text-sm font-orbitron font-medium leading-none text-white whitespace-nowrap">AI Models</div>
                             <p className="text-xs leading-snug text-light-grey/70 font-orbitron whitespace-nowrap">
@@ -128,7 +129,7 @@ export default function Dashboard() {
         {/* AI News Feed */}
         <NewsFeed />
       </main>
-      
+
       {/* Footer */}
       <footer className="mt-16 py-8 border-t border-slate-700/50">
         <div className="max-w-7xl mx-auto px-6 text-center">
@@ -137,9 +138,9 @@ export default function Dashboard() {
               © 2025 RS Commercial Services, Inc. All rights reserved.
             </div>
             <div className="text-sm">
-              <a 
-                href="https://ai-explanation.com" 
-                target="_blank" 
+              <a
+                href="https://ai-explanation.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-tech-purple hover:text-bright-pink transition-colors duration-300 font-inter"
               >

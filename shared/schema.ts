@@ -79,3 +79,18 @@ export type InsertPrediction = z.infer<typeof insertPredictionSchema>;
 export type Prediction = typeof predictions.$inferSelect;
 export type InsertFrontierModel = z.infer<typeof insertFrontierModelSchema>;
 export type FrontierModel = typeof frontierModels.$inferSelect;
+
+// Newsletter subscription schema
+export const newsletterSubscriptions = pgTable("newsletter_subscriptions", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  subscribedAt: timestamp("subscribed_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
+});
+
+export const insertNewsletterSubscriptionSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
+
+export type InsertNewsletterSubscription = z.infer<typeof insertNewsletterSubscriptionSchema>;
+export type NewsletterSubscription = typeof newsletterSubscriptions.$inferSelect;

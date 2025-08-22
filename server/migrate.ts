@@ -1,14 +1,13 @@
-
 import { db } from "./db";
 import { newsArticles, metrics, predictions, frontierModels } from "@shared/schema";
 
 async function migrate() {
   try {
     console.log("Running database migrations...");
-    
+
     // Create tables using Drizzle's CREATE TABLE IF NOT EXISTS functionality
     // This is a simple approach - in production you'd use proper migrations
-    
+
     console.log("Creating frontier_models table...");
     await db.execute(`
       CREATE TABLE IF NOT EXISTS frontier_models (
@@ -27,7 +26,7 @@ async function migrate() {
         created_at TIMESTAMP DEFAULT NOW() NOT NULL
       );
     `);
-    
+
     console.log("Creating news_articles table...");
     await db.execute(`
       CREATE TABLE IF NOT EXISTS news_articles (
@@ -43,7 +42,7 @@ async function migrate() {
         created_at TIMESTAMP DEFAULT NOW() NOT NULL
       );
     `);
-    
+
     console.log("Creating metrics table...");
     await db.execute(`
       CREATE TABLE IF NOT EXISTS metrics (
@@ -55,7 +54,7 @@ async function migrate() {
         timestamp TIMESTAMP DEFAULT NOW() NOT NULL
       );
     `);
-    
+
     console.log("Creating predictions table...");
     await db.execute(`
       CREATE TABLE IF NOT EXISTS predictions (
@@ -69,9 +68,19 @@ async function migrate() {
         created_at TIMESTAMP DEFAULT NOW() NOT NULL
       );
     `);
-    
+
+    console.log("Creating newsletter_subscriptions table...");
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS newsletter_subscriptions (
+        id SERIAL PRIMARY KEY,
+        email TEXT NOT NULL UNIQUE,
+        subscribed_at TIMESTAMP DEFAULT NOW() NOT NULL,
+        is_active BOOLEAN DEFAULT true NOT NULL
+      );
+    `);
+
     console.log("Database migration completed successfully!");
-    
+
   } catch (error) {
     console.error("Migration failed:", error);
     throw error;

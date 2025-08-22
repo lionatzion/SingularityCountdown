@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertNewsArticleSchema, insertMetricsSchema, insertPredictionSchema } from "@shared/schema";
+import { insertNewsArticleSchema, insertMetricsSchema, insertPredictionSchema, insertNewsletterSubscriptionSchema } from "@shared/schema";
 import { MLPredictor } from "./ml-predictor";
 import { ArtificialAnalysisService } from "./artificial-analysis";
 import path from "path";
@@ -435,6 +435,23 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       }
 
       res.status(statusCode).json({ message: errorMessage });
+    }
+  });
+
+  // Newsletter subscription endpoint
+  app.post("/api/newsletter/subscribe", async (req, res) => {
+    try {
+      const validation = insertNewsletterSubscriptionSchema.safeParse(req.body);
+      if (!validation.success) {
+        res.status(400).json({ message: "Invalid email address", errors: validation.error.errors });
+        return;
+      }
+
+      const subscription = await storage.subscribeToNewsletter(validation.data);
+      res.json({ message: "Successfully subscribed to newsletter!", subscription: { email: subscription.email } });
+    } catch (error) {
+      console.error("Error subscribing to newsletter:", error);
+      res.status(500).json({ message: "Failed to subscribe to newsletter" });
     }
   });
 

@@ -1,4 +1,4 @@
-import { newsArticles, metrics, predictions, frontierModels, type NewsArticle, type InsertNewsArticle, type Metrics, type InsertMetrics, type Prediction, type InsertPrediction, type FrontierModel, type InsertFrontierModel } from "@shared/schema";
+import { newsArticles, metrics, predictions, frontierModels, newsletterSubscriptions, type NewsArticle, type InsertNewsArticle, type Metrics, type InsertMetrics, type Prediction, type InsertPrediction, type FrontierModel, type InsertFrontierModel, type NewsletterSubscription, type InsertNewsletterSubscription } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
 
@@ -13,6 +13,8 @@ export interface IStorage {
   getFrontierModels(): Promise<FrontierModel[]>;
   upsertFrontierModel(model: InsertFrontierModel): Promise<FrontierModel>;
   clearOldFrontierModels(): Promise<void>;
+  subscribeToNewsletter(subscription: InsertNewsletterSubscription): Promise<NewsletterSubscription>;
+  getNewsletterSubscriptions(): Promise<NewsletterSubscription[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -182,6 +184,34 @@ export class DatabaseStorage implements IStorage {
     await db
       .delete(frontierModels)
       .where(eq(frontierModels.lastUpdated, oneDayAgo));
+  }
+
+  async subscribeToNewsletter(insertSubscription: InsertNewsletterSubscription): Promise<NewsletterSubscription> {
+    // Check if email already exists
+    const existing = await db
+      .select()
+      .from(newsletterSubscriptions)
+      .where(eq(newsletterSubscriptions.email, insertSubscription.email))
+      .limit(1);
+
+    if (existing.length > 0) {
+      return existing[0]; // Return existing subscription
+    }
+
+    const [subscription] = await db
+      .insert(newsletterSubscriptions)
+      .values(insertSubscription)
+      .returning();
+    return subscription;
+  }
+
+  async getNewsletterSubscriptions(): Promise<NewsletterSubscription[]> {
+    const result = await db
+      .select()
+      .from(newsletterSubscriptions)
+      .where(eq(newsletterSubscriptions.isActive, true))
+      .orderBy(desc(newsletterSubscriptions.subscribedAt));
+    return result;
   }
 }
 
