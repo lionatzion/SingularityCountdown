@@ -35,6 +35,22 @@ export const predictions = pgTable("predictions", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const frontierModels = pgTable("frontier_models", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  company: text("company").notNull(),
+  releaseDate: text("release_date"),
+  singularityProximity: integer("singularity_proximity").notNull(),
+  capabilities: text("capabilities").array().notNull(),
+  benchmarkScores: text("benchmark_scores").notNull(), // JSON string
+  status: text("status").notNull(),
+  pricing: text("pricing"), // JSON string
+  performance: text("performance"), // JSON string
+  qualityScore: integer("quality_score"),
+  lastUpdated: timestamp("last_updated").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const insertNewsArticleSchema = createInsertSchema(newsArticles).omit({
   id: true,
   createdAt: true,
@@ -50,9 +66,16 @@ export const insertPredictionSchema = createInsertSchema(predictions).omit({
   createdAt: true,
 });
 
+export const insertFrontierModelSchema = createInsertSchema(frontierModels).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertNewsArticle = z.infer<typeof insertNewsArticleSchema>;
 export type NewsArticle = typeof newsArticles.$inferSelect;
 export type InsertMetrics = z.infer<typeof insertMetricsSchema>;
 export type Metrics = typeof metrics.$inferSelect;
 export type InsertPrediction = z.infer<typeof insertPredictionSchema>;
 export type Prediction = typeof predictions.$inferSelect;
+export type InsertFrontierModel = z.infer<typeof insertFrontierModelSchema>;
+export type FrontierModel = typeof frontierModels.$inferSelect;

@@ -203,7 +203,7 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
     }
   });
 
-  // Get frontier models from Artificial Analysis API
+  // Get frontier models from Artificial Analysis API (with caching)
   app.get("/api/frontier-models", async (req, res) => {
     try {
       if (!process.env.ARTIFICIAL_ANALYSIS_API_KEY) {
@@ -214,8 +214,7 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       }
 
       const artificialAnalysis = new ArtificialAnalysisService();
-      const rawModels = await artificialAnalysis.getModels();
-      const frontierModels = artificialAnalysis.transformToFrontierModels(rawModels);
+      const frontierModels = await artificialAnalysis.getCachedModels();
       
       res.json(frontierModels);
     } catch (error: any) {
