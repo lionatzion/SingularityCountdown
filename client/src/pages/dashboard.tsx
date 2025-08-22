@@ -55,6 +55,12 @@ export default function Dashboard() {
               <h1 className="text-xl font-orbitron font-bold text-white">Singularity Predictor</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <a 
+                href="/ai-models" 
+                className="text-sm font-inter text-light-grey/70 hover:text-tech-purple transition-colors duration-300"
+              >
+                AI Models
+              </a>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-neon-green rounded-full pulse-ring"></div>
                 <span className="text-sm font-jetbrains text-neon-green">LIVE</span>
