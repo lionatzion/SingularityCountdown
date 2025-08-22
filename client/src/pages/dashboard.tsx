@@ -132,20 +132,28 @@ export default function Dashboard() {
 
       {/* Footer */}
       <footer className="mt-16 py-8 border-t border-slate-700/50">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-sm text-light-grey/70">
-              © 2025 RS Commercial Services, Inc. All rights reserved.
-            </div>
-            <div className="text-sm">
-              <a
-                href="https://ai-explanation.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-tech-purple hover:text-bright-pink transition-colors duration-300 font-inter"
-              >
-                AI Model Analysis
-              </a>
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Newsletter Signup */}
+          <div className="mb-8 flex justify-center">
+            <NewsletterSignup />
+          </div>
+          
+          {/* Footer Links */}
+          <div className="text-center">
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+              <div className="text-sm text-light-grey/70">
+                © 2025 RS Commercial Services, Inc. All rights reserved.
+              </div>
+              <div className="text-sm">
+                <a
+                  href="https://ai-explanation.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-tech-purple hover:text-bright-pink transition-colors duration-300 font-inter"
+                >
+                  AI Model Analysis
+                </a>
+              </div>
             </div>
           </div>
         </div>
