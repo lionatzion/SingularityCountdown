@@ -123,6 +123,59 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
+  async getAllFrontierModels(): Promise<any[]> {
+    try {
+      const models = await db
+        .select()
+        .from(frontierModels)
+        .orderBy(frontierModels.lastUpdated);
+      
+      return models.map(model => ({
+        model: model.name,
+        company: model.company,
+        release_date: model.releaseDate,
+        input_price: model.inputPrice,
+        output_price: model.outputPrice,
+        context_length: model.contextLength,
+        speed_tokens_per_second: model.speed,
+        latency_seconds: model.latency,
+        quality_score: model.qualityScore,
+        throughput_tokens_per_minute: model.throughput
+      }));
+    } catch (error) {
+      console.error("Error fetching frontier models from database:", error);
+      return [];
+    }
+  }
+
+  async insertFrontierModels(models: any[]): Promise<void> {
+    try {
+      for (const model of models) {
+        await this.upsertFrontierModel({
+          name: model.model,
+          company: model.company,
+          releaseDate: model.release_date || "Unknown",
+          singularityProximity: 75,
+          capabilities: ["Text Generation"],
+          reasoning: 75,
+          creativity: 75,
+          coding: 75,
+          multimodal: 75,
+          status: "active",
+          inputPrice: model.input_price,
+          outputPrice: model.output_price,
+          speed: model.speed_tokens_per_second,
+          latency: model.latency_seconds,
+          contextLength: model.context_length,
+          throughput: model.throughput_tokens_per_minute,
+          qualityScore: model.quality_score
+        });
+      }
+    } catch (error) {
+      console.error("Error inserting frontier models:", error);
+    }
+  }
+
   async clearOldFrontierModels(): Promise<void> {
     // Clear models older than 24 hours
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);

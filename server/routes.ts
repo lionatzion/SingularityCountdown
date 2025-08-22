@@ -285,18 +285,29 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
             benchmarkScores: { reasoning: 88, creativity: 86, coding: 91, multimodal: 96 },
             status: "active",
             pricing: { inputPrice: 0.002, outputPrice: 0.008 },
-            performance: { speed: 200, latency: 0.5, contextLength: 1000000, throughput: 12000 }
+            performance: { speed: 180, latency: 0.6, contextLength: 100000, throughput: 10800 }
           },
           {
-            name: "o3",
-            company: "OpenAI",
-            releaseDate: "2024-12-20",
-            singularityProximity: 92,
-            capabilities: ["Advanced Reasoning", "Math Proofs", "PhD-level Science", "Chain of Thought"],
-            benchmarkScores: { reasoning: 98, creativity: 85, coding: 94, multimodal: 88 },
+            name: "Gemini 2.5 Pro",
+            company: "Google",
+            releaseDate: "2025-01-25",
+            singularityProximity: 91,
+            capabilities: ["Ultra Long Context", "Advanced Multimodal", "Scientific Research", "Agent Actions", "Code Generation"],
+            benchmarkScores: { reasoning: 97, creativity: 89, coding: 95, multimodal: 98 },
             status: "preview",
-            pricing: { inputPrice: 0.060, outputPrice: 0.240 },
-            performance: { speed: 50, latency: 3.0, contextLength: 128000, throughput: 3000 }
+            pricing: { inputPrice: 0.012, outputPrice: 0.035 },
+            performance: { speed: 160, latency: 1.0, contextLength: 1000000, throughput: 9600 }
+          },
+          {
+            name: "Grok 4",
+            company: "xAI",
+            releaseDate: "2025-01-18",
+            singularityProximity: 85,
+            capabilities: ["Real-time Information", "Wit & Humor", "Advanced Reasoning", "Multimodal", "X Integration"],
+            benchmarkScores: { reasoning: 90, creativity: 95, coding: 87, multimodal: 86 },
+            status: "active",
+            pricing: { inputPrice: 0.005, outputPrice: 0.020 },
+            performance: { speed: 130, latency: 1.1, contextLength: 150000, throughput: 7800 }
           }
         ];
 

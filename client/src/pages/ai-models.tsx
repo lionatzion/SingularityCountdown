@@ -74,7 +74,9 @@ export default function AIModels() {
       singularityProximity: 87,
       capabilities: ["Advanced Reasoning", "Multimodal", "Code Generation", "Scientific Research"],
       benchmarkScores: { reasoning: 95, creativity: 89, coding: 93, multimodal: 91 },
-      status: "active"
+      status: "active",
+      pricing: { inputPrice: 0.010, outputPrice: 0.030 },
+      performance: { speed: 150, latency: 0.8, contextLength: 200000, throughput: 9000 }
     },
     {
       name: "Claude 3.5 Sonnet",
@@ -83,7 +85,20 @@ export default function AIModels() {
       singularityProximity: 82,
       capabilities: ["Long Context", "Code Analysis", "Creative Writing", "Tool Use"],
       benchmarkScores: { reasoning: 91, creativity: 94, coding: 89, multimodal: 85 },
-      status: "active"
+      status: "active",
+      pricing: { inputPrice: 0.003, outputPrice: 0.015 },
+      performance: { speed: 120, latency: 1.2, contextLength: 200000, throughput: 7200 }
+    },
+    {
+      name: "Claude 4",
+      company: "Anthropic",
+      releaseDate: "2025-01-20",
+      singularityProximity: 89,
+      capabilities: ["Constitutional AI", "Advanced Reasoning", "Long Context", "Multimodal", "Tool Use"],
+      benchmarkScores: { reasoning: 96, creativity: 97, coding: 92, multimodal: 89 },
+      status: "preview",
+      pricing: { inputPrice: 0.008, outputPrice: 0.025 },
+      performance: { speed: 140, latency: 0.9, contextLength: 500000, throughput: 8400 }
     },
     {
       name: "Gemini 2.0 Flash",
@@ -92,7 +107,31 @@ export default function AIModels() {
       singularityProximity: 84,
       capabilities: ["Real-time Processing", "Multimodal", "Agent Actions", "Live API"],
       benchmarkScores: { reasoning: 88, creativity: 86, coding: 91, multimodal: 96 },
-      status: "active"
+      status: "active",
+      pricing: { inputPrice: 0.002, outputPrice: 0.008 },
+      performance: { speed: 180, latency: 0.6, contextLength: 100000, throughput: 10800 }
+    },
+    {
+      name: "Gemini 2.5 Pro",
+      company: "Google",
+      releaseDate: "2025-01-25",
+      singularityProximity: 91,
+      capabilities: ["Ultra Long Context", "Advanced Multimodal", "Scientific Research", "Agent Actions", "Code Generation"],
+      benchmarkScores: { reasoning: 97, creativity: 89, coding: 95, multimodal: 98 },
+      status: "preview",
+      pricing: { inputPrice: 0.012, outputPrice: 0.035 },
+      performance: { speed: 160, latency: 1.0, contextLength: 1000000, throughput: 9600 }
+    },
+    {
+      name: "Grok 4",
+      company: "xAI",
+      releaseDate: "2025-01-18",
+      singularityProximity: 85,
+      capabilities: ["Real-time Information", "Wit & Humor", "Advanced Reasoning", "Multimodal", "X Integration"],
+      benchmarkScores: { reasoning: 90, creativity: 95, coding: 87, multimodal: 86 },
+      status: "active",
+      pricing: { inputPrice: 0.005, outputPrice: 0.020 },
+      performance: { speed: 130, latency: 1.1, contextLength: 150000, throughput: 7800 }
     },
     {
       name: "o3",
@@ -101,7 +140,9 @@ export default function AIModels() {
       singularityProximity: 92,
       capabilities: ["Advanced Reasoning", "Math Proofs", "PhD-level Science", "Chain of Thought"],
       benchmarkScores: { reasoning: 98, creativity: 85, coding: 94, multimodal: 88 },
-      status: "preview"
+      status: "preview",
+      pricing: { inputPrice: 0.020, outputPrice: 0.060 },
+      performance: { speed: 80, latency: 2.5, contextLength: 300000, throughput: 4800 }
     }
   ];
 
