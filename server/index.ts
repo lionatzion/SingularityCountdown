@@ -44,7 +44,7 @@ async function startServer() {
     log(`Migration failed, but continuing startup: ${error}`);
   }
 
-  const server = await registerRoutes(app);
+  const server = registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
