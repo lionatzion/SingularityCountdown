@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { migrate } from "./migrate";
 
 const app = express();
 app.use(express.json());
@@ -22,11 +23,9 @@ app.use((req, res, next) => {
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
+        // Truncate the JSON response to avoid excessively long log lines
+        const jsonString = JSON.stringify(capturedJsonResponse);
+        logLine += ` :: ${jsonString.length > 80 ? jsonString.substring(0, 77) + "…" : jsonString}`;
       }
 
       log(logLine);
@@ -37,6 +36,14 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Run migrations on startup to ensure database tables exist
+  try {
+    await migrate();
+  } catch (error) {
+    // Log the error but allow the server to continue if migration fails
+    log(`Migration failed, but continuing startup: ${error}`);
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -44,7 +51,10 @@ app.use((req, res, next) => {
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    throw err;
+    // Re-throwing the error might be necessary for other error handlers,
+    // but for a simple express server, it might cause unhandled rejection.
+    // Consider carefully if this re-throw is needed.
+    // throw err;
   });
 
   // importantly only setup vite in development and after
