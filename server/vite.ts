@@ -25,7 +25,7 @@ export async function setupVite(app: Express, server: Server) {
     hmr: {
       port: 24678,
     },
-    allowedHosts: true,
+    allowedHosts: true as const,
   };
 
   const vite = await createViteServer({
