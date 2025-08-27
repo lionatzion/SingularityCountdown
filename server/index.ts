@@ -36,8 +36,8 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Add health check endpoint first to respond immediately
-  app.get("/", (req, res) => {
+  // Add health check endpoint for API status
+  app.get("/api/health", (req, res) => {
     res.status(200).json({ 
       status: "OK", 
       message: "AI Singularity Tracker API is running",
