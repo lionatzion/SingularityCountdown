@@ -384,7 +384,7 @@ export default function AIModels() {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {(frontierModels.length > 0 ? frontierModels : fallbackModels).map((model, index) => (
+              {(frontierModels.length > 0 ? frontierModels : fallbackModels).map((model: any, index: number) => (
                 <Card key={index} className="bg-slate-900/50 border-slate-700/50 p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
@@ -419,9 +419,9 @@ export default function AIModels() {
                       <div key={key}>
                         <div className="flex justify-between text-sm mb-1">
                           <span className="text-white capitalize">{key}</span>
-                          <span className="text-bright-pink">{value}%</span>
+                          <span className="text-bright-pink">{value as number}%</span>
                         </div>
-                        <Progress value={value} className="h-1 bg-slate-700" />
+                        <Progress value={value as number} className="h-1 bg-slate-700" />
                       </div>
                     ))}
                   </div>
@@ -430,7 +430,7 @@ export default function AIModels() {
                     <div>
                       <p className="text-sm text-light-grey/70 mb-2">Key Capabilities:</p>
                       <div className="flex flex-wrap gap-2">
-                        {model.capabilities.map((capability, i) => (
+                        {model.capabilities.map((capability: string, i: number) => (
                           <Badge key={i} variant="outline" className="border-tech-purple/50 text-tech-purple">
                             {capability}
                           </Badge>

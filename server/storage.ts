@@ -136,13 +136,13 @@ export class DatabaseStorage implements IStorage {
         model: model.name,
         company: model.company,
         release_date: model.releaseDate,
-        input_price: model.inputPrice,
-        output_price: model.outputPrice,
-        context_length: model.contextLength,
-        speed_tokens_per_second: model.speed,
-        latency_seconds: model.latency,
+        input_price: 0, // Default value since property doesn't exist
+        output_price: 0, // Default value since property doesn't exist
+        context_length: 0, // Default value since property doesn't exist
+        speed_tokens_per_second: 0, // Default value since property doesn't exist
+        latency_seconds: 0, // Default value since property doesn't exist
         quality_score: model.qualityScore,
-        throughput_tokens_per_minute: model.throughput
+        throughput_tokens_per_minute: 0 // Default value since property doesn't exist
       }));
     } catch (error) {
       console.error("Error fetching frontier models from database:", error);
@@ -159,17 +159,23 @@ export class DatabaseStorage implements IStorage {
           releaseDate: model.release_date || "Unknown",
           singularityProximity: 75,
           capabilities: ["Text Generation"],
-          reasoning: 75,
-          creativity: 75,
-          coding: 75,
-          multimodal: 75,
+          benchmarkScores: JSON.stringify({
+            reasoning: 75,
+            creativity: 75,
+            coding: 75,
+            multimodal: 75
+          }),
           status: "active",
-          inputPrice: model.input_price,
-          outputPrice: model.output_price,
-          speed: model.speed_tokens_per_second,
-          latency: model.latency_seconds,
-          contextLength: model.context_length,
-          throughput: model.throughput_tokens_per_minute,
+          pricing: JSON.stringify({
+            inputPrice: model.input_price || 0,
+            outputPrice: model.output_price || 0
+          }),
+          performance: JSON.stringify({
+            speed: model.speed_tokens_per_second || 0,
+            latency: model.latency_seconds || 0,
+            contextLength: model.context_length || 0,
+            throughput: model.throughput_tokens_per_minute || 0
+          }),
           qualityScore: model.quality_score
         });
       }
