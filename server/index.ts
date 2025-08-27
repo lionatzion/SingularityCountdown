@@ -44,6 +44,15 @@ app.use((req, res, next) => {
     log(`Migration failed, but continuing startup: ${error}`);
   }
 
+  // Add health check endpoint before other routes
+  app.get("/", (req, res) => {
+    res.status(200).json({ 
+      status: "OK", 
+      message: "AI Singularity Tracker API is running",
+      timestamp: new Date().toISOString()
+    });
+  });
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

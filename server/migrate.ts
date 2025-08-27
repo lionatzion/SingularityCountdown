@@ -5,6 +5,22 @@ async function migrate() {
   try {
     console.log("Running database migrations...");
 
+    // Check if tables already exist to avoid unnecessary console output
+    const tableExists = await db.execute(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'news_articles'
+      );
+    `);
+    
+    const tablesExist = (tableExists.rows[0] as any).exists;
+    
+    if (tablesExist) {
+      console.log("Database tables already exist, skipping migration...");
+      return;
+    }
+
     // Create tables using Drizzle's CREATE TABLE IF NOT EXISTS functionality
     // This is a simple approach - in production you'd use proper migrations
 
