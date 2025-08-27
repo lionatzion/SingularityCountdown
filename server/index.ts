@@ -36,15 +36,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Run migrations on startup to ensure database tables exist
-  try {
-    await migrate();
-  } catch (error) {
-    // Log the error but allow the server to continue if migration fails
-    log(`Migration failed, but continuing startup: ${error}`);
-  }
-
-  // Add health check endpoint before other routes
+  // Add health check endpoint first to respond immediately
   app.get("/", (req, res) => {
     res.status(200).json({ 
       status: "OK", 
@@ -52,6 +44,14 @@ app.use((req, res, next) => {
       timestamp: new Date().toISOString()
     });
   });
+
+  // Run migrations on startup to ensure database tables exist
+  try {
+    await migrate();
+  } catch (error) {
+    // Log the error but allow the server to continue if migration fails
+    log(`Migration failed, but continuing startup: ${error}`);
+  }
 
   const server = await registerRoutes(app);
 
