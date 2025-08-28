@@ -4,6 +4,11 @@
 
 echo "Starting deployment process..."
 
+# 0. Stop any running development servers
+echo "Stopping development servers..."
+pkill -f "tsx server/index.ts" || true
+sleep 2
+
 # 1. Install dependencies
 echo "Installing dependencies..."
 npm ci
