@@ -80,4 +80,22 @@ app.use((req, res, next) => {
   server.listen(port, "0.0.0.0", () => {
     log(`Server running on http://0.0.0.0:${port} (${isProduction ? 'production' : 'development'})`);
   });
-})();
+
+  // Keep the process alive
+  process.on('SIGTERM', () => {
+    log('SIGTERM received, shutting down gracefully');
+    server.close(() => {
+      process.exit(0);
+    });
+  });
+
+  process.on('SIGINT', () => {
+    log('SIGINT received, shutting down gracefully');
+    server.close(() => {
+      process.exit(0);
+    });
+  });
+})().catch((error) => {
+  console.error('Failed to start server:', error);
+  process.exit(1);
+});
