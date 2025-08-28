@@ -1,0 +1,9 @@
+{
+  "workflows": [
+    {
+      "name": "Deploy Production",
+      "command": "./deploy.sh",
+      "description": "Build and deploy the production version of the application"
+    }
+  ]
+}
