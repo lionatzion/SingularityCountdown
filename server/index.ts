@@ -36,22 +36,29 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  const isProduction = process.env.NODE_ENV === "production";
+  
+  // Set Express environment
+  app.set("env", isProduction ? "production" : "development");
 
   // Add health check endpoint for API status
   app.get("/api/health", (req, res) => {
     res.status(200).json({ 
       status: "OK", 
       message: "AI Singularity Tracker API is running",
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      environment: isProduction ? "production" : "development"
     });
   });
 
-  // Run migrations on startup to ensure database tables exist
-  try {
-    await migrate();
-  } catch (error) {
-    // Log the error but allow the server to continue if migration fails
-    log(`Migration failed, but continuing startup: ${error}`);
+  // Run migrations only in production or if explicitly needed
+  if (isProduction) {
+    try {
+      await migrate();
+      log("Database migration completed");
+    } catch (error) {
+      log(`Migration failed: ${error}`);
+    }
   }
 
   const server = await registerRoutes(app);
@@ -59,32 +66,20 @@ app.use((req, res, next) => {
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
     res.status(status).json({ message });
-    // Re-throwing the error might be necessary for other error handlers,
-    // but for a simple express server, it might cause unhandled rejection.
-    // Consider carefully if this re-throw is needed.
-    // throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
+  // Setup serving based on environment
+  if (isProduction) {
     serveStatic(app);
+    log("Production mode: serving static files");
+  } else {
+    await setupVite(app, server);
+    log("Development mode: Vite HMR enabled");
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
   const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  server.listen(port, "0.0.0.0", () => {
+    log(`Server running on http://0.0.0.0:${port} (${isProduction ? 'production' : 'development'})`);
   });
 })();

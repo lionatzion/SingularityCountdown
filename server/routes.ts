@@ -7,12 +7,13 @@ import { ArtificialAnalysisService } from "./artificial-analysis";
 import path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Root route handler for deployment health checks
+  // Root route handler for deployment health checks - must respond immediately
   app.get("/", (req, res) => {
     res.status(200).json({ 
       status: "OK", 
       message: "AI Singularity Tracker is running",
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || "development"
     });
   });
 
