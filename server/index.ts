@@ -36,6 +36,15 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Add health check endpoint for deployment
+  app.get("/", (req, res) => {
+    res.status(200).json({ 
+      status: "OK", 
+      message: "AI Singularity Tracker is running",
+      timestamp: new Date().toISOString()
+    });
+  });
+
   // Add health check endpoint for API status
   app.get("/api/health", (req, res) => {
     res.status(200).json({ 
