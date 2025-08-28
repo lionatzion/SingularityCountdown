@@ -51,14 +51,12 @@ app.use((req, res, next) => {
     });
   });
 
-  // Run migrations only in production or if explicitly needed
-  if (isProduction) {
-    try {
-      await migrate();
-      log("Database migration completed");
-    } catch (error) {
-      log(`Migration failed: ${error}`);
-    }
+  // Run migrations in both dev and production
+  try {
+    await migrate();
+    log("Database migration completed");
+  } catch (error) {
+    log(`Migration failed: ${error}`);
   }
 
   const server = await registerRoutes(app);

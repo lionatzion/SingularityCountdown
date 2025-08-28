@@ -4,6 +4,11 @@ import { newsArticles, metrics, predictions, frontierModels } from "@shared/sche
 async function migrate() {
   try {
     console.log("Running database migrations...");
+    console.log("Database URL:", process.env.DATABASE_URL ? "✓ Set" : "✗ Missing");
+
+    // Test database connection first
+    await db.execute(`SELECT 1`);
+    console.log("Database connection successful");
 
     // Check if tables already exist to avoid unnecessary console output
     const tableExists = await db.execute(`
