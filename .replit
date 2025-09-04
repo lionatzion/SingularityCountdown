@@ -8,7 +8,7 @@ channel = "stable-24_05"
 [deployment]
 deploymentTarget = "autoscale"
 build = ["sh", "-c", "npm ci && npm run build && cp -r dist/public server/"]
-run = ["sh", "-c", "npm start"]
+run = ["sh", "-c", "deploy-simple.js"]
 
 [[ports]]
 localPort = 5000
