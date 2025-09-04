@@ -43,13 +43,16 @@ export default function Dashboard() {
 
   // Auto-fetch news on component mount and every 30 minutes
   useEffect(() => {
+    // Initial fetch
     fetchNews();
+    
+    // Set up interval for periodic fetching
     const interval = setInterval(() => {
       fetchNews();
     }, 30 * 60 * 1000); // 30 minutes
 
     return () => clearInterval(interval);
-  }, [fetchNews]);
+  }, []); // Remove fetchNews from dependencies to prevent infinite re-renders
 
   return (
     <div className="min-h-screen bg-dark-space text-light-grey">
