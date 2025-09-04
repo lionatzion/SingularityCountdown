@@ -99,6 +99,17 @@ app.use((req, res, next) => {
       process.exit(0);
     });
   });
+
+  // Global error handlers to prevent unhandled rejections
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    // Don't exit the process, just log the error
+  });
+
+  process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    // Don't exit the process, just log the error
+  });
 })().catch((error) => {
   console.error('Failed to start server:', error);
   process.exit(1);
