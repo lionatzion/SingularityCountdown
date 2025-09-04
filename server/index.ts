@@ -41,6 +41,32 @@ app.use((req, res, next) => {
   // Set Express environment
   app.set("env", isProduction ? "production" : "development");
 
+  // Add root endpoint for deployment health checks
+  // This will only respond to API-style requests (Accept: application/json or User-Agent health check patterns)
+  app.get("/", (req, res, next) => {
+    const acceptHeader = req.headers.accept || '';
+    const userAgent = req.headers['user-agent'] || '';
+    
+    // Respond with JSON for health checks, API requests, or automated tools
+    if (acceptHeader.includes('application/json') || 
+        userAgent.includes('health') ||
+        userAgent.includes('check') ||
+        userAgent.includes('monitor') ||
+        userAgent.includes('ping') ||
+        req.query.health === 'check') {
+      res.status(200).json({ 
+        status: "OK", 
+        message: "AI Singularity Tracker is running",
+        timestamp: new Date().toISOString(),
+        environment: isProduction ? "production" : "development",
+        app: "Singularity Tracker"
+      });
+    } else {
+      // For browser requests, let the frontend handle routing
+      next();
+    }
+  });
+
   // Add health check endpoint for API status
   app.get("/api/health", (req, res) => {
     res.status(200).json({ 
