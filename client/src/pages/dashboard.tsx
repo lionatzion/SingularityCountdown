@@ -33,7 +33,6 @@ export default function Dashboard() {
       });
     },
     onError: (error) => {
-      console.error("Failed to fetch news:", error);
       toast({
         title: "News Fetch Failed",
         description: "Unable to fetch latest AI news",

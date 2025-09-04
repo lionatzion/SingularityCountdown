@@ -50,7 +50,6 @@ export default function MLPredictionPanel() {
       });
     },
     onError: (error: any) => {
-      console.error("Failed to generate prediction:", error);
       
       let errorMessage = "Unable to generate ML prediction. Please try again.";
       
