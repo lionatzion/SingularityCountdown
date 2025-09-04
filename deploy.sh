@@ -17,11 +17,12 @@ sleep 2
 echo "📦 Installing dependencies..."
 npm ci
 
-# 2. Build the application
+# 2. Build the application with production environment
 echo "🔧 Building application..."
-npm run build
+NODE_ENV=production vite build
+NODE_ENV=production esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
 
-# 3. Ensure static files are in correct location
+# 3. Ensure static files are in correct location for production
 echo "📁 Setting up static files for production..."
 mkdir -p server/public
 if [ -d "dist/public" ]; then
@@ -31,7 +32,7 @@ else
     echo "⚠️  Warning: dist/public not found, static files may not be available"
 fi
 
-# 4. Verify health check endpoint will work
+# 4. Verify production build
 echo "🔍 Verifying production build..."
 if [ -f "dist/index.js" ]; then
     echo "✅ Backend build successful"
@@ -40,7 +41,25 @@ else
     exit 1
 fi
 
-# 5. Start the production server
+# 5. Test health check endpoint locally
+echo "🔍 Testing health check before deployment..."
+NODE_ENV=production node dist/index.js &
+SERVER_PID=$!
+sleep 3
+
+# Test health check
+if curl -f -s http://localhost:5000/ > /dev/null; then
+    echo "✅ Health check endpoint working"
+else
+    echo "❌ Health check endpoint failed"
+    kill $SERVER_PID 2>/dev/null || true
+    exit 1
+fi
+
+kill $SERVER_PID 2>/dev/null || true
+sleep 1
+
+# 6. Start the production server
 echo "🌐 Starting production server..."
 echo "💚 Health check available at /"
 NODE_ENV=production exec node dist/index.js
