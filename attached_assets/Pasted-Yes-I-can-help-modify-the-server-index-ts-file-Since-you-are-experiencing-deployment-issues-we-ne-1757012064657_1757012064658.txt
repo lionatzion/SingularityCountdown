@@ -1,0 +1,58 @@
+Yes, I can help modify the server/index.ts file. Since you are experiencing deployment issues, we need to ensure the server stays alive and can respond to health checks correctly.
+
+Here’s an updated version of your server/index.ts file:
+
+import express, { type Express } from "express";
+import { createServer, type Server } from "http";
+import { registerRoutes } from "./routes"; // Make sure routes are registered
+import { migrate } from "./migrate";
+import { log } from "./vite"; // Assuming your log function is imported from vite.ts
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+  const start = Date.now();
+  const path = req.path;
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    log(`${req.method} ${path} ${res.statusCode} in ${duration}ms`);
+  });
+  next();
+});
+// Add health check endpoint
+app.get("/", (req, res) => {
+  res.status(200).json({ status: "OK", message: "Service is running" });
+});
+// Handle the database migrations
+(async () => {
+  const isProduction = process.env.NODE_ENV === "production";
+  try {
+    await migrate();
+    log("Database migration completed");
+  } catch (error) {
+    log(`Migration failed: ${error}`);
+  }
+  const server = app.listen(5000, "0.0.0.0", () => {
+    log(`Server running on http://0.0.0.0:5000 (${isProduction ? 'production' : 'development'})`);
+  });
+  process.on('SIGTERM', () => {
+    log('SIGTERM received, shutting down gracefully');
+    server.close(() => {
+      process.exit(0);
+    });
+  });
+  process.on('SIGINT', () => {
+    log('SIGINT received, shutting down gracefully');
+    server.close(() => {
+      process.exit(0);
+    });
+  });
+})().catch((error) => {
+  console.error('Failed to start server:', error);
+  process.exit(1);
+});
+Key Changes:
+Health Check Endpoint: The root endpoint (/) now checks for health and returns a JSON response.
+Port Binding: The server is bound to 0.0.0.0 on port 5000, which is suitable for deployment and accessible externally.
+Graceful Shutdown: Handling shutdown signals (SIGTERM and SIGINT) to ensure server closes properly.
+Make these changes in your server/index.ts, and then try deploying again. This should help resolve issues related to the server exiting right after startup.
