@@ -21,58 +21,42 @@ app.use((req, res, next) => {
   next();
 });
 
-// CRITICAL: Root endpoint MUST return 200 for deployment health checks
+// CRITICAL: Root endpoint MUST return 200 immediately for deployment health checks
 app.get("/", (req, res) => {
-  // ALWAYS return 200 OK - no conditions, no exceptions
-  res.status(200).json({ 
-    status: "OK", 
-    message: "Server is healthy",
-    timestamp: new Date().toISOString()
-  });
+  res.status(200).json({ status: "OK" });
 });
 
 app.get("/api/health", (req, res) => {
-  res.status(200).json({ 
-    status: "OK", 
-    message: "API is healthy",
-    timestamp: new Date().toISOString()
-  });
+  res.status(200).json({ status: "OK" });
 });
 
-// Handle the database migrations
-(async () => {
-  const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === "production";
 
-  try {
-    await migrate();
-    log("Database migration completed");
-  } catch (error) {
-    log(`Migration failed: ${error}`);
-    // CONTINUE ANYWAY - don't let migration failure stop the server
-  }
-
-  // Register routes with fallback
-  let server;
+async function startServer() {
+  // Register routes first
+  let server: Server;
   try {
     server = await registerRoutes(app);
   } catch (error) {
     log(`Route registration failed: ${error}`);
-    // Create basic server if route registration fails
     server = createServer(app);
   }
 
   // Setup serving based on environment
-  try {
-    if (isProduction) {
+  if (isProduction) {
+    try {
       serveStatic(app);
       log("Production mode: serving static files");
-    } else {
+    } catch (error) {
+      log(`Static file serving failed: ${error}`);
+    }
+  } else {
+    try {
       await setupVite(app, server);
       log("Development mode: Vite HMR enabled");
+    } catch (error) {
+      log(`Vite setup failed: ${error}`);
     }
-  } catch (error) {
-    log(`Serving setup failed: ${error}`);
-    // Continue without static file serving if it fails
   }
 
   // Error handler
@@ -83,10 +67,18 @@ app.get("/api/health", (req, res) => {
   });
 
   const port = parseInt(process.env.PORT || "5000", 10);
+
+  // Start server immediately - don't wait for migrations
   server.listen(port, "0.0.0.0", () => {
     log(`Server running on http://0.0.0.0:${port} (${isProduction ? 'production' : 'development'})`);
+    
+    // Run database migration AFTER server starts to avoid blocking health checks
+    migrate()
+      .then(() => log("Database migration completed"))
+      .catch(error => log(`Migration failed: ${error}`));
   });
 
+  // Process handlers
   process.on('SIGTERM', () => {
     log('SIGTERM received, shutting down gracefully');
     server.close(() => {
@@ -100,19 +92,20 @@ app.get("/api/health", (req, res) => {
       process.exit(0);
     });
   });
-})().catch((error) => {
+
+  return server;
+}
+
+startServer().catch(error => {
   console.error('Server startup error:', error);
-  // DO NOT EXIT - Keep the server running no matter what
-  console.error('Server will continue running despite errors');
+  process.exit(1);
 });
 
 // Global error handlers - NEVER let the server crash
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
-  // DO NOT EXIT
 });
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection:', reason);
-  // DO NOT EXIT
 });
