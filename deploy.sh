@@ -48,7 +48,7 @@ SERVER_PID=$!
 sleep 3
 
 # Test health check
-if curl -f -s http://localhost:5000/ > /dev/null; then
+if curl -f -s http://localhost:5000/health > /dev/null; then
     echo "✅ Health check endpoint working"
 else
     echo "❌ Health check endpoint failed"
