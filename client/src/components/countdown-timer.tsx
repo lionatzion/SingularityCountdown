@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { type Prediction } from "@shared/schema";
 
 interface CountdownData {
   years: number;
@@ -7,20 +9,31 @@ interface CountdownData {
   hours: number;
 }
 
+const DEFAULT_TARGET_DATE = new Date('2032-03-15T12:00:00');
+
 export default function CountdownTimer() {
   const [countdown, setCountdown] = useState<CountdownData>({
-    years: 7,
-    months: 3,
-    days: 15,
-    hours: 12,
+    years: 0,
+    months: 0,
+    days: 0,
+    hours: 0,
   });
+
+  const { data: latestPrediction } = useQuery<Prediction>({
+    queryKey: ["/api/predictions/latest"],
+    staleTime: 10 * 60 * 1000,
+  });
+
+  const targetTimestamp = latestPrediction?.predictedDate 
+    ? new Date(latestPrediction.predictedDate).getTime() 
+    : DEFAULT_TARGET_DATE.getTime();
+
+  const targetDate = new Date(targetTimestamp);
 
   useEffect(() => {
     const updateCountdown = () => {
-      // Target date: March 15, 2032
-      const targetDate = new Date('2032-03-15T12:00:00').getTime();
-      const now = new Date().getTime();
-      const distance = targetDate - now;
+      const now = Date.now();
+      const distance = targetTimestamp - now;
 
       if (distance > 0) {
         const years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
@@ -28,15 +41,28 @@ export default function CountdownTimer() {
         const days = Math.floor((distance % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 
-        setCountdown({ years, months, days, hours });
+        setCountdown(prev => {
+          if (prev.years === years && prev.months === months && prev.days === days && prev.hours === hours) {
+            return prev;
+          }
+          return { years, months, days, hours };
+        });
       }
     };
 
     updateCountdown();
-    const interval = setInterval(updateCountdown, 3600000); // Update every hour
+    const interval = setInterval(updateCountdown, 3600000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [targetTimestamp]);
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
     <div className="glow-border rounded-2xl p-8 gradient-bg mb-8">
@@ -80,7 +106,7 @@ export default function CountdownTimer() {
         </div>
 
         <div className="text-center">
-          <p className="text-2xl font-jetbrains text-white mb-2">March 15, 2032</p>
+          <p className="text-2xl font-jetbrains text-white mb-2" data-testid="text-predicted-date">{formatDate(targetDate)}</p>
           <p className="text-sm text-light-grey/60">Based on current GPU performance and AI advancement trends</p>
         </div>
       </div>
