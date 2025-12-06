@@ -21,19 +21,34 @@ export default function ChartsSection() {
         progressionChartInstance.current = new Chart(ctx, {
           type: 'line',
           data: {
-            labels: ['2020', '2021', '2022', '2023', '2024', '2025 (Proj)'],
-            datasets: [{
-              label: 'FLOPS (×10²⁰)',
-              data: [1.2, 2.8, 4.5, 7.3, 12.1, 18.7],
-              borderColor: '#667EEA',
-              backgroundColor: 'rgba(102, 126, 234, 0.1)',
-              borderWidth: 3,
-              tension: 0.4,
-              pointBackgroundColor: '#667EEA',
-              pointBorderWidth: 2,
-              pointRadius: 5,
-              fill: true
-            }]
+            labels: ['2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+            datasets: [
+              {
+                label: 'Historical (×10²⁰ FLOPS)',
+                data: [1.2, 2.8, 4.5, 7.3, 12.1, 18.7, null, null, null, null, null],
+                borderColor: '#667EEA',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                pointBackgroundColor: '#667EEA',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                fill: true
+              },
+              {
+                label: 'Projected Growth',
+                data: [null, null, null, null, null, 18.7, 28.5, 43.2, 65.8, 100.2, 152.7],
+                borderColor: '#F093FB',
+                backgroundColor: 'rgba(240, 147, 251, 0.1)',
+                borderWidth: 3,
+                borderDash: [8, 4],
+                tension: 0.4,
+                pointBackgroundColor: '#F093FB',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                fill: true
+              }
+            ]
           },
           options: {
             responsive: true,
@@ -127,7 +142,7 @@ export default function ChartsSection() {
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
       {/* Computing Power Progression */}
       <div className="glow-border rounded-xl p-6 gradient-bg">
-        <h3 className="text-xl font-inter font-semibold text-white mb-6">Computing Power Progression</h3>
+        <h3 className="text-xl font-inter font-semibold text-white mb-6">Computing Power Progression & Projected Growth</h3>
         <div className="h-64">
           <canvas ref={progressionChartRef}></canvas>
         </div>
