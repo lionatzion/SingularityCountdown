@@ -51,3 +51,8 @@ args = "pkill -f \"node.*server\" || true"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run dev"
+
+[userenv]
+
+[userenv.production]
+NODE_ENV = "production"
