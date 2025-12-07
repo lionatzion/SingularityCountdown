@@ -109,17 +109,19 @@ export default function SingularityProgression() {
               }),
               pointRadius: years.map((year) => {
                 const yearNum = parseInt(year);
-                if (year === '2032') return 12;
-                if (year === currentYear.toString()) return 10;
-                if (yearNum > 2032) return 7;
-                return 5;
+                const isMobile = window.innerWidth < 640;
+                if (year === '2032') return isMobile ? 8 : 12;
+                if (year === currentYear.toString()) return isMobile ? 6 : 10;
+                if (yearNum > 2032) return isMobile ? 4 : 7;
+                return isMobile ? 3 : 5;
               }),
               pointHoverRadius: years.map((year) => {
                 const yearNum = parseInt(year);
-                if (year === '2032') return 15;
-                if (year === currentYear.toString()) return 12;
-                if (yearNum > 2032) return 10;
-                return 8;
+                const isMobile = window.innerWidth < 640;
+                if (year === '2032') return isMobile ? 10 : 15;
+                if (year === currentYear.toString()) return isMobile ? 8 : 12;
+                if (yearNum > 2032) return isMobile ? 6 : 10;
+                return isMobile ? 5 : 8;
               }),
               fill: true
             }]
@@ -135,9 +137,10 @@ export default function SingularityProgression() {
               legend: {
                 labels: { 
                   color: '#E5E7EB', 
-                  font: { family: 'Inter', size: 14 },
+                  font: { family: 'Inter', size: window.innerWidth < 640 ? 10 : 14 },
                   usePointStyle: true,
-                  pointStyle: 'circle'
+                  pointStyle: 'circle',
+                  boxWidth: window.innerWidth < 640 ? 8 : 12
                 }
               },
               tooltip: {
@@ -224,16 +227,19 @@ export default function SingularityProgression() {
             scales: {
               x: {
                 title: {
-                  display: true,
+                  display: window.innerWidth >= 640,
                   text: selectedPeriod === 'singularity' ? 'Year (Singularity Window)' : 
                         selectedPeriod === 'pre' ? 'Year (Pre-Singularity)' :
                         selectedPeriod === 'post' ? 'Year (Post-Singularity)' : 'Year',
                   color: '#E5E7EB',
-                  font: { family: 'Orbitron', size: 14, weight: 'bold' }
+                  font: { family: 'Orbitron', size: window.innerWidth < 640 ? 10 : 14, weight: 'bold' }
                 },
                 ticks: { 
                   color: '#E5E7EB',
-                  font: { family: 'JetBrains Mono', size: 12 }
+                  font: { family: 'JetBrains Mono', size: window.innerWidth < 640 ? 9 : 12 },
+                  maxRotation: window.innerWidth < 640 ? 45 : 0,
+                  autoSkip: true,
+                  maxTicksLimit: window.innerWidth < 640 ? 8 : 15
                 },
                 grid: { 
                   color: 'rgba(229, 231, 235, 0.1)',
@@ -243,13 +249,13 @@ export default function SingularityProgression() {
               y: {
                 type: selectedPeriod === 'pre' ? 'linear' : 'logarithmic',
                 title: {
-                  display: true,
-                  text: selectedPeriod === 'pre' ? 'AI Progress (% toward Singularity)' :
-                        selectedPeriod === 'singularity' ? 'Intelligence Level (Critical Threshold)' :
-                        selectedPeriod === 'post' ? 'Superintelligence Multiplier (x Human)' :
-                        'Intelligence Level (% of Human Baseline)',
+                  display: window.innerWidth >= 768,
+                  text: selectedPeriod === 'pre' ? 'AI Progress (%)' :
+                        selectedPeriod === 'singularity' ? 'Intelligence Level' :
+                        selectedPeriod === 'post' ? 'Superintelligence (x Human)' :
+                        'Intelligence (%)',
                   color: '#E5E7EB',
-                  font: { family: 'Orbitron', size: 14, weight: 'bold' }
+                  font: { family: 'Orbitron', size: window.innerWidth < 640 ? 10 : 14, weight: 'bold' }
                 },
                 min: selectedPeriod === 'pre' ? 0 : 
                      selectedPeriod === 'singularity' ? 80 : 
@@ -259,28 +265,30 @@ export default function SingularityProgression() {
                      selectedPeriod === 'post' ? 100000 : 10000,
                 ticks: { 
                   color: '#E5E7EB',
-                  font: { family: 'JetBrains Mono', size: 12 },
+                  font: { family: 'JetBrains Mono', size: window.innerWidth < 640 ? 9 : 12 },
+                  maxTicksLimit: window.innerWidth < 640 ? 6 : 10,
                   callback: function(value: any) {
+                    const isMobile = window.innerWidth < 640;
                     if (selectedPeriod === 'pre') {
                       return `${value}%`;
                     } else if (selectedPeriod === 'singularity') {
-                      if (value === 100) return '100% (Human Baseline)';
-                      if (value === 200) return '200% (2x Human)';
-                      if (value === 500) return '500% (5x Human)';
-                      if (value === 1000) return '1000% (10x Human)';
-                      return `${value}%`;
+                      if (value === 100) return isMobile ? '100%' : '100% (Human)';
+                      if (value === 200) return isMobile ? '2x' : '200% (2x)';
+                      if (value === 500) return isMobile ? '5x' : '500% (5x)';
+                      if (value === 1000) return isMobile ? '10x' : '1000% (10x)';
+                      return isMobile ? `${value}%` : `${value}%`;
                     } else if (selectedPeriod === 'post') {
                       const multiplier = Math.round(value / 100);
-                      if (value === 100) return '1x (Human)';
-                      if (value === 1000) return '10x Human';
-                      if (value === 10000) return '100x Human';
-                      if (value === 100000) return '1000x Human';
-                      if (multiplier >= 1000) return `${(multiplier/1000).toFixed(0)}k x Human`;
-                      return `${multiplier}x Human`;
+                      if (value === 100) return isMobile ? '1x' : '1x (Human)';
+                      if (value === 1000) return '10x';
+                      if (value === 10000) return '100x';
+                      if (value === 100000) return '1000x';
+                      if (multiplier >= 1000) return `${(multiplier/1000).toFixed(0)}k x`;
+                      return `${multiplier}x`;
                     } else {
-                      if (value === 100) return '100% (Human Baseline)';
-                      if (value === 1000) return '1000% (10x Human)';
-                      if (value === 10000) return '10000% (100x Human)';
+                      if (value === 100) return isMobile ? '100%' : '100% (Human)';
+                      if (value === 1000) return isMobile ? '10x' : '1000% (10x)';
+                      if (value === 10000) return isMobile ? '100x' : '10000% (100x)';
                       return value + '%';
                     }
                   }
@@ -396,7 +404,7 @@ export default function SingularityProgression() {
           </div>
         </div>
         
-        <div className="h-80 mb-6 relative">
+        <div className="h-64 sm:h-80 lg:h-96 mb-6 relative">
           <canvas ref={chartRef}></canvas>
           
           {/* Hover Information Overlay */}
