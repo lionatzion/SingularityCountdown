@@ -17,6 +17,10 @@ export default function SingularityProgression() {
 
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
+        // Responsive settings based on screen size
+        const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+        const isTablet = typeof window !== 'undefined' && window.innerWidth < 768;
+        
         // Generate different data ranges based on selected period
         let years: string[] = [];
         let singularityProgress: number[] = [];
@@ -109,7 +113,6 @@ export default function SingularityProgression() {
               }),
               pointRadius: years.map((year) => {
                 const yearNum = parseInt(year);
-                const isMobile = window.innerWidth < 640;
                 if (year === '2032') return isMobile ? 8 : 12;
                 if (year === currentYear.toString()) return isMobile ? 6 : 10;
                 if (yearNum > 2032) return isMobile ? 4 : 7;
@@ -117,7 +120,6 @@ export default function SingularityProgression() {
               }),
               pointHoverRadius: years.map((year) => {
                 const yearNum = parseInt(year);
-                const isMobile = window.innerWidth < 640;
                 if (year === '2032') return isMobile ? 10 : 15;
                 if (year === currentYear.toString()) return isMobile ? 8 : 12;
                 if (yearNum > 2032) return isMobile ? 6 : 10;
@@ -137,10 +139,10 @@ export default function SingularityProgression() {
               legend: {
                 labels: { 
                   color: '#E5E7EB', 
-                  font: { family: 'Inter', size: window.innerWidth < 640 ? 10 : 14 },
+                  font: { family: 'Inter', size: isMobile ? 10 : 14 },
                   usePointStyle: true,
                   pointStyle: 'circle',
-                  boxWidth: window.innerWidth < 640 ? 8 : 12
+                  boxWidth: isMobile ? 8 : 12
                 }
               },
               tooltip: {
@@ -227,19 +229,19 @@ export default function SingularityProgression() {
             scales: {
               x: {
                 title: {
-                  display: window.innerWidth >= 640,
+                  display: !isMobile,
                   text: selectedPeriod === 'singularity' ? 'Year (Singularity Window)' : 
                         selectedPeriod === 'pre' ? 'Year (Pre-Singularity)' :
                         selectedPeriod === 'post' ? 'Year (Post-Singularity)' : 'Year',
                   color: '#E5E7EB',
-                  font: { family: 'Orbitron', size: window.innerWidth < 640 ? 10 : 14, weight: 'bold' }
+                  font: { family: 'Orbitron', size: isMobile ? 10 : 14, weight: 'bold' }
                 },
                 ticks: { 
                   color: '#E5E7EB',
-                  font: { family: 'JetBrains Mono', size: window.innerWidth < 640 ? 9 : 12 },
-                  maxRotation: window.innerWidth < 640 ? 45 : 0,
+                  font: { family: 'JetBrains Mono', size: isMobile ? 9 : 12 },
+                  maxRotation: isMobile ? 45 : 0,
                   autoSkip: true,
-                  maxTicksLimit: window.innerWidth < 640 ? 8 : 15
+                  maxTicksLimit: isMobile ? 8 : 15
                 },
                 grid: { 
                   color: 'rgba(229, 231, 235, 0.1)',
@@ -249,13 +251,13 @@ export default function SingularityProgression() {
               y: {
                 type: selectedPeriod === 'pre' ? 'linear' : 'logarithmic',
                 title: {
-                  display: window.innerWidth >= 768,
+                  display: !isTablet,
                   text: selectedPeriod === 'pre' ? 'AI Progress (%)' :
                         selectedPeriod === 'singularity' ? 'Intelligence Level' :
                         selectedPeriod === 'post' ? 'Superintelligence (x Human)' :
                         'Intelligence (%)',
                   color: '#E5E7EB',
-                  font: { family: 'Orbitron', size: window.innerWidth < 640 ? 10 : 14, weight: 'bold' }
+                  font: { family: 'Orbitron', size: isMobile ? 10 : 14, weight: 'bold' }
                 },
                 min: selectedPeriod === 'pre' ? 0 : 
                      selectedPeriod === 'singularity' ? 80 : 
@@ -265,10 +267,9 @@ export default function SingularityProgression() {
                      selectedPeriod === 'post' ? 100000 : 10000,
                 ticks: { 
                   color: '#E5E7EB',
-                  font: { family: 'JetBrains Mono', size: window.innerWidth < 640 ? 9 : 12 },
-                  maxTicksLimit: window.innerWidth < 640 ? 6 : 10,
+                  font: { family: 'JetBrains Mono', size: isMobile ? 9 : 12 },
+                  maxTicksLimit: isMobile ? 6 : 10,
                   callback: function(value: any) {
-                    const isMobile = window.innerWidth < 640;
                     if (selectedPeriod === 'pre') {
                       return `${value}%`;
                     } else if (selectedPeriod === 'singularity') {

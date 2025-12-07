@@ -17,6 +17,8 @@ app.get("/api/health", (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Root endpoint is handled by Vite/static file serving at the end
+
 const isProduction = process.env.NODE_ENV === "production";
 const port = parseInt(process.env.PORT || "5000", 10);
 
