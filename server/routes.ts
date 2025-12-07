@@ -1,12 +1,11 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertNewsArticleSchema, insertMetricsSchema, insertPredictionSchema, insertNewsletterSubscriptionSchema } from "@shared/schema";
 import { MLPredictor } from "./ml-predictor";
 import { ArtificialAnalysisService } from "./artificial-analysis";
 import path from "path";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export async function registerRoutes(app: Express): Promise<void> {
 
   // Serve sitemap.xml (dynamic generation)
   app.get("/sitemap.xml", (req, res) => {
@@ -480,6 +479,4 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
     }
   });
 
-  const httpServer = createServer(app);
-  return httpServer;
 }
