@@ -108,17 +108,4 @@ async function migrate() {
   }
 }
 
-// Run migration if this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  migrate()
-    .then(() => {
-      console.log("Migration completed!");
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error("Migration failed:", error);
-      process.exit(1);
-    });
-}
-
 export { migrate };
