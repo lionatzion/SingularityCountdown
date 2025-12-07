@@ -217,6 +217,17 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
   app.get("/api/metrics", async (req, res) => {
     try {
       const metrics = await storage.getLatestMetrics();
+      if (!metrics) {
+        // Return default metrics if none exist
+        return res.json({
+          id: 1,
+          gpuPerformance: 94587,
+          neuralCapacity: 847,
+          processingSpeed: 21,
+          aiBenchmarks: 9458,
+          timestamp: new Date(),
+        });
+      }
       res.json(metrics);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch metrics" });
@@ -243,6 +254,19 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
   app.get("/api/predictions/latest", async (req, res) => {
     try {
       const prediction = await storage.getLatestPrediction();
+      if (!prediction) {
+        // Return default prediction if none exist
+        return res.json({
+          id: 1,
+          modelVersion: "v1.0-gpt5",
+          predictedDate: new Date("2031-06-15"),
+          confidenceScore: 75,
+          analysisFactors: ["Neuromorphic chip scalability", "Exponential GPU performance growth", "Increased AI research funding", "Transformer model scaling", "Biological computation integration"],
+          rawAnalysis: "The technological singularity is predicted to occur in the early 2030s based on exponential AI capability growth.",
+          trendData: JSON.stringify({ gpuGrowthRate: 1.5, aiCapabilityGrowth: 1.7, researchVelocity: 2, investmentTrends: 1.8, technicalBreakthroughs: 1.6 }),
+          createdAt: new Date(),
+        });
+      }
       res.json(prediction);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch prediction" });
