@@ -69,9 +69,17 @@ export default function NewsFeed() {
                   />
                 )}
                 <div className="flex-1">
-                  <h4 className="text-white font-inter font-medium mb-2 hover:text-tech-purple cursor-pointer">
-                    {article.title}
-                  </h4>
+                  <a 
+                    href={article.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block"
+                    data-testid={`link-article-${article.id}`}
+                  >
+                    <h4 className="text-white font-inter font-medium mb-2 hover:text-tech-purple cursor-pointer transition-colors">
+                      {article.title}
+                    </h4>
+                  </a>
                   <p className="text-sm text-light-grey/70 mb-2 line-clamp-2">
                     {article.summary}
                   </p>
