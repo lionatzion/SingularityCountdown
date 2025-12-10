@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Loader2, Brain, TrendingUp, Calendar, Target } from "lucide-react";
+import { Loader2, Brain, TrendingUp, Calendar, Target, Clock, RefreshCw } from "lucide-react";
 import { type Prediction } from "@shared/schema";
 
 interface PredictionAnalysis {
@@ -26,11 +26,14 @@ interface PredictionAnalysis {
 interface GeneratePredictionResponse {
   prediction: Prediction;
   analysis: PredictionAnalysis;
+  cached?: boolean;
+  cacheExpiresAt?: string;
 }
 
 export default function MLPredictionPanel() {
   const { toast } = useToast();
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [lastResponse, setLastResponse] = useState<GeneratePredictionResponse | null>(null);
 
   const { data: latestPrediction, isLoading } = useQuery({
     queryKey: ["/api/predictions/latest"],
@@ -38,27 +41,33 @@ export default function MLPredictionPanel() {
   });
 
   const { mutate: generatePrediction, isPending } = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/predictions/generate");
+    mutationFn: async (forceRefresh: boolean = false) => {
+      const response = await apiRequest("POST", "/api/predictions/generate", { forceRefresh });
       try {
         return await response.json();
       } catch (e) {
-        // Response might already be parsed or empty
         return response;
       }
     },
-    onSuccess: (data: any) => {
+    onSuccess: (data: GeneratePredictionResponse) => {
+      setLastResponse(data);
       queryClient.invalidateQueries({ queryKey: ["/api/predictions/latest"] });
-      toast({
-        title: "ML Prediction Generated",
-        description: `New prediction: ${new Date(data.prediction.predictedDate).toLocaleDateString()} (${data.prediction.confidenceScore}% confidence)`,
-      });
+      
+      if (data.cached) {
+        toast({
+          title: "Using Cached Prediction",
+          description: `Prediction from ${new Date(data.prediction.createdAt).toLocaleString()} - Next refresh available ${data.cacheExpiresAt ? new Date(data.cacheExpiresAt).toLocaleString() : 'soon'}`,
+        });
+      } else {
+        toast({
+          title: "New ML Prediction Generated",
+          description: `Prediction: ${new Date(data.prediction.predictedDate).toLocaleDateString()} (${data.prediction.confidenceScore}% confidence)`,
+        });
+      }
     },
     onError: (error: any) => {
-      
       let errorMessage = "Unable to generate ML prediction. Please try again.";
       
-      // Check for specific error conditions
       if (error?.message?.includes("API key") || error?.status === 401) {
         errorMessage = "OpenAI API key is not configured. Please set the OPENAI_API_KEY environment variable.";
       } else if (error?.status === 429) {
@@ -115,23 +124,36 @@ export default function MLPredictionPanel() {
                 </CardDescription>
               </div>
             </div>
-            <Button
-              onClick={() => generatePrediction()}
-              disabled={isPending}
-              className="bg-bright-pink hover:bg-bright-pink/80 text-dark-space font-semibold"
-            >
-              {isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <TrendingUp className="w-4 h-4 mr-2" />
-                  Generate New Prediction
-                </>
-              )}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => generatePrediction(false)}
+                disabled={isPending}
+                className="bg-bright-pink hover:bg-bright-pink/80 text-dark-space font-semibold"
+                data-testid="button-generate-prediction"
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <TrendingUp className="w-4 h-4 mr-2" />
+                    Get Prediction
+                  </>
+                )}
+              </Button>
+              <Button
+                onClick={() => generatePrediction(true)}
+                disabled={isPending}
+                variant="outline"
+                className="border-tech-purple text-tech-purple hover:bg-tech-purple/20"
+                title="Force a new prediction even if cached"
+                data-testid="button-force-refresh-prediction"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </CardHeader>
 
@@ -155,8 +177,14 @@ export default function MLPredictionPanel() {
                     <div className="text-2xl font-jetbrains font-bold text-white">
                       {formatDate(prediction.predictedDate)}
                     </div>
-                    <div className="text-xs text-light-grey mt-1">
-                      Model: {prediction.modelVersion}
+                    <div className="text-xs text-light-grey mt-1 flex items-center gap-2">
+                      <span>Model: {prediction.modelVersion}</span>
+                      {lastResponse?.cached && (
+                        <Badge variant="outline" className="text-xs border-yellow-500/50 text-yellow-400">
+                          <Clock className="w-3 h-3 mr-1" />
+                          Cached
+                        </Badge>
+                      )}
                     </div>
                   </div>
 
@@ -255,9 +283,10 @@ export default function MLPredictionPanel() {
                 Generate your first AI-powered singularity prediction based on current data trends
               </p>
               <Button
-                onClick={() => generatePrediction()}
+                onClick={() => generatePrediction(false)}
                 disabled={isPending}
                 className="bg-bright-pink hover:bg-bright-pink/80 text-dark-space font-semibold"
+                data-testid="button-generate-first-prediction"
               >
                 <TrendingUp className="w-4 h-4 mr-2" />
                 Generate First Prediction

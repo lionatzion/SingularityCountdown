@@ -399,9 +399,41 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
     }
   });
 
-  // Generate new ML prediction
+  // Generate new ML prediction (with 24-hour caching)
   app.post("/api/predictions/generate", async (req, res) => {
     try {
+      // Check for force refresh parameter
+      const forceRefresh = req.body?.forceRefresh === true;
+      
+      // Check if we have a recent prediction (less than 24 hours old)
+      if (!forceRefresh) {
+        const latestPrediction = await storage.getLatestPrediction();
+        if (latestPrediction && latestPrediction.createdAt) {
+          const predictionAge = Date.now() - new Date(latestPrediction.createdAt).getTime();
+          const twentyFourHours = 24 * 60 * 60 * 1000;
+          
+          if (predictionAge < twentyFourHours) {
+            // Return cached prediction
+            const trendData = typeof latestPrediction.trendData === 'string' 
+              ? JSON.parse(latestPrediction.trendData) 
+              : latestPrediction.trendData;
+              
+            return res.json({
+              prediction: latestPrediction,
+              analysis: {
+                predictedDate: latestPrediction.predictedDate,
+                confidenceScore: latestPrediction.confidenceScore,
+                analysisFactors: latestPrediction.analysisFactors,
+                rawAnalysis: latestPrediction.rawAnalysis,
+                trendData: trendData
+              },
+              cached: true,
+              cacheExpiresAt: new Date(new Date(latestPrediction.createdAt).getTime() + twentyFourHours)
+            });
+          }
+        }
+      }
+      
       // Check if OpenAI API key is configured
       if (!process.env.OPENAI_API_KEY) {
         res.status(500).json({ 
@@ -439,7 +471,8 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
 
       res.json({
         prediction: storedPrediction,
-        analysis: analysis
+        analysis: analysis,
+        cached: false
       });
     } catch (error: any) {
       console.error("Error generating prediction:", error);
