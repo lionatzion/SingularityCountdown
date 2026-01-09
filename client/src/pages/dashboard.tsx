@@ -6,7 +6,13 @@ import MetricsGrid from "@/components/metrics-grid";
 import ChartsSection from "@/components/charts-section";
 import NewsFeed from "@/components/news-feed";
 import NewsletterSignup from "@/components/newsletter-signup";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import HistoricalTimeline from "@/components/historical-timeline";
+import ScenarioExplorer from "@/components/scenario-explorer";
+import ShareableCard from "@/components/shareable-card";
+import EmbedWidget from "@/components/embed-widget";
+import CommunityPredictions from "@/components/community-predictions";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -55,9 +61,9 @@ export default function Dashboard() {
   }, []); // Remove fetchNews from dependencies to prevent infinite re-renders
 
   return (
-    <div className="min-h-screen bg-dark-space text-light-grey">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       {/* Header */}
-      <header className="border-b border-gray-800 bg-dark-space/95 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -95,6 +101,7 @@ export default function Dashboard() {
                 <div className="w-2 h-2 bg-neon-green rounded-full pulse-ring"></div>
                 <span className="text-sm font-jetbrains text-neon-green">LIVE</span>
               </div>
+              <ThemeToggle />
             </div>
           </div>
         </div>
@@ -128,8 +135,26 @@ export default function Dashboard() {
         {/* Historical Data Charts */}
         <ChartsSection />
 
+        {/* What If Scenario Explorer */}
+        <ScenarioExplorer />
+
+        {/* Historical AI Milestones Timeline */}
+        <HistoricalTimeline />
+
+        {/* Shareable Prediction Card */}
+        <ShareableCard />
+
+        {/* Embed Widget */}
+        <EmbedWidget />
+
+        {/* Community Predictions */}
+        <CommunityPredictions />
+
         {/* AI News Feed */}
         <NewsFeed />
+
+        {/* Newsletter Signup */}
+        <NewsletterSignup />
       </main>
 
       {/* Footer */}

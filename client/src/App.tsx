@@ -3,6 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/theme-provider";
 import Dashboard from "@/pages/dashboard";
 import AIModels from "@/pages/ai-models";
 import { Component, type ReactNode, type ErrorInfo } from "react";
@@ -68,14 +69,16 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <div className="min-h-screen bg-dark-space">
-            <Toaster />
-            <Router />
-          </div>
-        </TooltipProvider>
-      </QueryClientProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <div className="min-h-screen bg-background transition-colors duration-300">
+              <Toaster />
+              <Router />
+            </div>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

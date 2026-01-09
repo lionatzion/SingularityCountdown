@@ -94,3 +94,26 @@ export const insertNewsletterSubscriptionSchema = z.object({
 
 export type InsertNewsletterSubscription = z.infer<typeof insertNewsletterSubscriptionSchema>;
 export type NewsletterSubscription = typeof newsletterSubscriptions.$inferSelect;
+
+// Community predictions schema
+export const communityPredictions = pgTable("community_predictions", {
+  id: serial("id").primaryKey(),
+  displayName: varchar("display_name", { length: 100 }).notNull(),
+  predictedYear: integer("predicted_year").notNull(),
+  predictedMonth: integer("predicted_month").notNull(),
+  reasoning: text("reasoning").notNull(),
+  confidenceLevel: varchar("confidence_level", { length: 20 }).notNull(),
+  upvotes: integer("upvotes").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertCommunityPredictionSchema = z.object({
+  displayName: z.string().min(2, "Name must be at least 2 characters").max(100),
+  predictedYear: z.number().min(2025).max(2100),
+  predictedMonth: z.number().min(1).max(12),
+  reasoning: z.string().min(10, "Please provide more detail").max(500),
+  confidenceLevel: z.enum(["low", "medium", "high", "very_high"]),
+});
+
+export type InsertCommunityPrediction = z.infer<typeof insertCommunityPredictionSchema>;
+export type CommunityPrediction = typeof communityPredictions.$inferSelect;

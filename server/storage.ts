@@ -1,6 +1,6 @@
-import { newsArticles, metrics, predictions, frontierModels, newsletterSubscriptions, type NewsArticle, type InsertNewsArticle, type Metrics, type InsertMetrics, type Prediction, type InsertPrediction, type FrontierModel, type InsertFrontierModel, type NewsletterSubscription, type InsertNewsletterSubscription } from "@shared/schema";
+import { newsArticles, metrics, predictions, frontierModels, newsletterSubscriptions, communityPredictions, type NewsArticle, type InsertNewsArticle, type Metrics, type InsertMetrics, type Prediction, type InsertPrediction, type FrontierModel, type InsertFrontierModel, type NewsletterSubscription, type InsertNewsletterSubscription, type CommunityPrediction, type InsertCommunityPrediction } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 
 export interface IStorage {
   getLatestNews(limit?: number): Promise<NewsArticle[]>;
@@ -15,6 +15,10 @@ export interface IStorage {
   clearOldFrontierModels(): Promise<void>;
   subscribeToNewsletter(subscription: InsertNewsletterSubscription): Promise<NewsletterSubscription>;
   getNewsletterSubscriptions(): Promise<NewsletterSubscription[]>;
+  getCommunityPredictions(limit?: number): Promise<CommunityPrediction[]>;
+  createCommunityPrediction(prediction: InsertCommunityPrediction): Promise<CommunityPrediction>;
+  upvoteCommunityPrediction(id: number): Promise<CommunityPrediction | undefined>;
+  getCommunityPredictionStats(): Promise<{ averageYear: number; averageMonth: number; totalPredictions: number }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -218,6 +222,50 @@ export class DatabaseStorage implements IStorage {
       .where(eq(newsletterSubscriptions.isActive, true))
       .orderBy(desc(newsletterSubscriptions.subscribedAt));
     return result;
+  }
+
+  async getCommunityPredictions(limit: number = 50): Promise<CommunityPrediction[]> {
+    const result = await db
+      .select()
+      .from(communityPredictions)
+      .orderBy(desc(communityPredictions.upvotes), desc(communityPredictions.createdAt))
+      .limit(limit);
+    return result;
+  }
+
+  async createCommunityPrediction(insertPrediction: InsertCommunityPrediction): Promise<CommunityPrediction> {
+    const [prediction] = await db
+      .insert(communityPredictions)
+      .values(insertPrediction)
+      .returning();
+    return prediction;
+  }
+
+  async upvoteCommunityPrediction(id: number): Promise<CommunityPrediction | undefined> {
+    const [updated] = await db
+      .update(communityPredictions)
+      .set({ upvotes: sql`${communityPredictions.upvotes} + 1` })
+      .where(eq(communityPredictions.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async getCommunityPredictionStats(): Promise<{ averageYear: number; averageMonth: number; totalPredictions: number }> {
+    const predictions = await db.select().from(communityPredictions);
+    
+    if (predictions.length === 0) {
+      return { averageYear: 2031, averageMonth: 6, totalPredictions: 0 };
+    }
+    
+    const totalMonths = predictions.reduce((acc, p) => {
+      return acc + (p.predictedYear * 12 + p.predictedMonth);
+    }, 0);
+    
+    const avgTotalMonths = totalMonths / predictions.length;
+    const averageYear = Math.floor(avgTotalMonths / 12);
+    const averageMonth = Math.round(avgTotalMonths % 12) || 1;
+    
+    return { averageYear, averageMonth, totalPredictions: predictions.length };
   }
 }
 

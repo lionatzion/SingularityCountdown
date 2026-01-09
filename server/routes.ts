@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { storage } from "./storage";
-import { insertNewsArticleSchema, insertMetricsSchema, insertPredictionSchema, insertNewsletterSubscriptionSchema } from "@shared/schema";
+import { insertNewsArticleSchema, insertMetricsSchema, insertPredictionSchema, insertNewsletterSubscriptionSchema, insertCommunityPredictionSchema } from "@shared/schema";
 import { MLPredictor } from "./ml-predictor";
 import { ArtificialAnalysisService } from "./artificial-analysis";
 import path from "path";
@@ -509,6 +509,64 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
     } catch (error) {
       console.error("Error subscribing to newsletter:", error);
       res.status(500).json({ message: "Failed to subscribe to newsletter" });
+    }
+  });
+
+  // Community Predictions endpoints
+  app.get("/api/community-predictions", async (req, res) => {
+    try {
+      const predictions = await storage.getCommunityPredictions(50);
+      res.json(predictions);
+    } catch (error) {
+      console.error("Error fetching community predictions:", error);
+      res.status(500).json({ message: "Failed to fetch community predictions" });
+    }
+  });
+
+  app.get("/api/community-predictions/stats", async (req, res) => {
+    try {
+      const stats = await storage.getCommunityPredictionStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching community prediction stats:", error);
+      res.status(500).json({ message: "Failed to fetch stats" });
+    }
+  });
+
+  app.post("/api/community-predictions", async (req, res) => {
+    try {
+      const validation = insertCommunityPredictionSchema.safeParse(req.body);
+      if (!validation.success) {
+        res.status(400).json({ message: "Invalid prediction data", errors: validation.error.errors });
+        return;
+      }
+
+      const prediction = await storage.createCommunityPrediction(validation.data);
+      res.json(prediction);
+    } catch (error) {
+      console.error("Error creating community prediction:", error);
+      res.status(500).json({ message: "Failed to create prediction" });
+    }
+  });
+
+  app.post("/api/community-predictions/:id/upvote", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        res.status(400).json({ message: "Invalid prediction ID" });
+        return;
+      }
+
+      const updated = await storage.upvoteCommunityPrediction(id);
+      if (!updated) {
+        res.status(404).json({ message: "Prediction not found" });
+        return;
+      }
+
+      res.json(updated);
+    } catch (error) {
+      console.error("Error upvoting prediction:", error);
+      res.status(500).json({ message: "Failed to upvote prediction" });
     }
   });
 
