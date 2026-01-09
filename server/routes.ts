@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { storage } from "./storage";
 import { insertNewsArticleSchema, insertMetricsSchema, insertPredictionSchema, insertNewsletterSubscriptionSchema, insertCommunityPredictionSchema } from "@shared/schema";
+import { generateDigestContent, generateDigestHtml, generateDigestPlainText, sendDigestToSubscribers } from "./email-digest";
 import { MLPredictor } from "./ml-predictor";
 import { ArtificialAnalysisService } from "./artificial-analysis";
 import path from "path";
@@ -567,6 +568,60 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
     } catch (error) {
       console.error("Error upvoting prediction:", error);
       res.status(500).json({ message: "Failed to upvote prediction" });
+    }
+  });
+
+  // Email Digest endpoints
+  app.get("/api/newsletter/digest/preview", async (req, res) => {
+    try {
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+      const host = req.headers['x-forwarded-host'] || req.get('host');
+      const siteUrl = `${protocol}://${host}`;
+      
+      const content = await generateDigestContent();
+      const html = generateDigestHtml(content, siteUrl);
+      
+      res.setHeader('Content-Type', 'text/html');
+      res.send(html);
+    } catch (error) {
+      console.error("Error generating digest preview:", error);
+      res.status(500).json({ message: "Failed to generate digest preview" });
+    }
+  });
+
+  app.get("/api/newsletter/digest/preview-json", async (req, res) => {
+    try {
+      const content = await generateDigestContent();
+      res.json(content);
+    } catch (error) {
+      console.error("Error generating digest content:", error);
+      res.status(500).json({ message: "Failed to generate digest content" });
+    }
+  });
+
+  app.post("/api/newsletter/digest/send", async (req, res) => {
+    try {
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+      const host = req.headers['x-forwarded-host'] || req.get('host');
+      const siteUrl = `${protocol}://${host}`;
+      
+      const result = await sendDigestToSubscribers(siteUrl);
+      
+      if (result.success) {
+        res.json({ 
+          message: `Digest sent to ${result.emailsSent} subscribers`,
+          emailsSent: result.emailsSent
+        });
+      } else {
+        res.status(500).json({ 
+          message: "Some digest emails failed to send",
+          emailsSent: result.emailsSent,
+          errors: result.errors
+        });
+      }
+    } catch (error) {
+      console.error("Error sending digest:", error);
+      res.status(500).json({ message: "Failed to send digest" });
     }
   });
 
