@@ -131,3 +131,44 @@ Preferred communication style: Simple, everyday language.
 - ✓ Implemented JSON-LD structured data for better search understanding
 - ✓ Created animated SVG favicon with AI-themed design
 - ✓ Configured proper canonical URLs and content indexing directives
+
+## Recent Feature Updates (January 9, 2026)
+
+### Theme System
+- **Dark/Light Mode Toggle**: Dual theme system with localStorage persistence
+- **Theme Provider**: React context-based theme management with smooth transitions
+- **CSS Variables**: Dynamic theming using CSS custom properties for colors and backgrounds
+
+### Community Features
+- **Community Predictions**: User-submitted singularity predictions with upvoting system
+- **Leaderboard**: Top predictions ranked by upvotes with aggregated statistics
+- **Average Prediction Date**: Computed from all community submissions
+
+### Interactive Tools
+- **What If Scenario Explorer**: Adjust prediction variables with interactive sliders
+- **Historical Timeline**: Key AI milestones from 2012-2025 with detailed descriptions
+- **Shareable Cards**: Downloadable prediction cards with social media sharing (Twitter, LinkedIn)
+
+### Embeddable Widgets
+- **Countdown Widget**: Embeddable timer with multiple integration options
+- **iframe Embed**: Full countdown display for external websites
+- **JavaScript Embed**: Lightweight script-based widget
+- **Badge Embed**: Compact countdown badge
+
+### Email Newsletter
+- **Weekly Digest System**: Automated email digest generation
+- **HTML/Plain Text Templates**: Dual format email support
+- **Digest Preview API**: Preview endpoints for testing
+- **Content Aggregation**: Combines predictions, news, metrics, and community data
+
+### Database Updates
+- **community_predictions table**: Stores user predictions with upvotes
+- **newsletter_subscriptions table**: Manages email subscriptions
+
+### API Endpoints Added
+- `GET/POST /api/community-predictions` - Community predictions CRUD
+- `POST /api/community-predictions/:id/upvote` - Upvote predictions
+- `GET /api/community-predictions/stats` - Aggregated statistics
+- `GET /api/newsletter/digest/preview` - HTML digest preview
+- `GET /api/newsletter/digest/preview-json` - JSON digest content
+- `POST /api/newsletter/digest/send` - Trigger digest sending
