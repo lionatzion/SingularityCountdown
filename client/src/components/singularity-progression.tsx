@@ -259,12 +259,13 @@ export default function SingularityProgression() {
                   color: '#E5E7EB',
                   font: { family: 'Orbitron', size: isMobile ? 10 : 14, weight: 'bold' }
                 },
+                grace: '10%',
                 min: selectedPeriod === 'pre' ? 0 : 
                      selectedPeriod === 'singularity' ? 80 : 
                      selectedPeriod === 'post' ? 100 : 1,
                 max: selectedPeriod === 'pre' ? 100 : 
-                     selectedPeriod === 'singularity' ? 1000 : 
-                     selectedPeriod === 'post' ? 100000 : 10000,
+                     selectedPeriod === 'singularity' ? 1200 : 
+                     selectedPeriod === 'post' ? 200000 : 15000,
                 ticks: { 
                   color: '#E5E7EB',
                   font: { family: 'JetBrains Mono', size: isMobile ? 9 : 12 },
