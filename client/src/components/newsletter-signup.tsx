@@ -64,7 +64,7 @@ export default function NewsletterSignup() {
     <div className="bg-dark-space/50 border border-light-grey/10 rounded-lg p-6 max-w-md mx-auto">
       <div className="flex items-center gap-2 mb-4">
         <Mail className="h-5 w-5 text-neon-green" />
-        <h3 className="text-lg font-inter font-semibold text-white">Stay Updated</h3>
+        <h3 className="text-lg font-inter font-semibold text-foreground">Stay Updated</h3>
       </div>
       <p className="text-sm text-light-grey/70 mb-4">
         Get the latest AI insights and singularity predictions delivered to your inbox.
@@ -75,7 +75,7 @@ export default function NewsletterSignup() {
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="flex-1 bg-dark-space/80 border-light-grey/20 text-white placeholder:text-light-grey/50"
+          className="flex-1 bg-background border-border text-foreground placeholder:text-muted-foreground"
           disabled={isLoading}
         />
         <Button 

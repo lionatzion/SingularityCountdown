@@ -142,7 +142,7 @@ export default function ChartsSection() {
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
       {/* Computing Power Progression */}
       <div className="glow-border rounded-xl p-6 gradient-bg">
-        <h3 className="text-xl font-inter font-semibold text-white mb-6">Computing Power Progression & Projected Growth</h3>
+        <h3 className="text-xl font-inter font-semibold text-foreground mb-6">Computing Power Progression & Projected Growth</h3>
         <div className="h-64">
           <canvas ref={progressionChartRef}></canvas>
         </div>
@@ -150,7 +150,7 @@ export default function ChartsSection() {
 
       {/* GPU Benchmark Trends */}
       <div className="glow-border rounded-xl p-6 gradient-bg">
-        <h3 className="text-xl font-inter font-semibold text-white mb-6">GPU Benchmark Trends</h3>
+        <h3 className="text-xl font-inter font-semibold text-foreground mb-6">GPU Benchmark Trends</h3>
         <div className="h-64">
           <canvas ref={gpuTrendsChartRef}></canvas>
         </div>

@@ -11,7 +11,7 @@ export default function NewsFeed() {
     return (
       <section className="glow-border rounded-xl p-6 gradient-bg">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-inter font-semibold text-white">Live AI News Feed</h3>
+          <h3 className="text-xl font-inter font-semibold text-foreground">Live AI News Feed</h3>
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 bg-red-500 rounded-full"></div>
             <span className="text-sm font-jetbrains text-red-500">ERROR</span>
@@ -27,7 +27,7 @@ export default function NewsFeed() {
   return (
     <section className="glow-border rounded-xl p-6 gradient-bg">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-inter font-semibold text-white">Live AI News Feed</h3>
+        <h3 className="text-xl font-inter font-semibold text-foreground">Live AI News Feed</h3>
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-neon-green rounded-full pulse-ring"></div>
           <span className="text-sm font-jetbrains text-neon-green">UPDATING</span>
@@ -76,7 +76,7 @@ export default function NewsFeed() {
                     className="block"
                     data-testid={`link-article-${article.id}`}
                   >
-                    <h4 className="text-white font-inter font-medium mb-2 hover:text-tech-purple cursor-pointer transition-colors">
+                    <h4 className="text-foreground font-inter font-medium mb-2 hover:text-tech-purple cursor-pointer transition-colors">
                       {article.title}
                     </h4>
                   </a>

@@ -116,7 +116,7 @@ export default function MLPredictionPanel() {
             <div className="flex items-center space-x-3">
               <Brain className="w-6 h-6 text-bright-pink" />
               <div>
-                <CardTitle className="text-xl font-orbitron text-white">
+                <CardTitle className="text-xl font-orbitron text-foreground">
                   AI-Powered Singularity Prediction
                 </CardTitle>
                 <CardDescription className="text-light-grey/70">
@@ -172,9 +172,9 @@ export default function MLPredictionPanel() {
                   <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-tech-purple/50">
                     <div className="flex items-center space-x-2 mb-2">
                       <Calendar className="w-5 h-5 text-tech-purple" />
-                      <h3 className="font-inter font-semibold text-white">Predicted Date</h3>
+                      <h3 className="font-inter font-semibold text-foreground">Predicted Date</h3>
                     </div>
-                    <div className="text-2xl font-jetbrains font-bold text-white">
+                    <div className="text-2xl font-jetbrains font-bold text-foreground">
                       {formatDate(prediction.predictedDate)}
                     </div>
                     <div className="text-xs text-light-grey mt-1 flex items-center gap-2">
@@ -191,7 +191,7 @@ export default function MLPredictionPanel() {
                   <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-neon-green/50">
                     <div className="flex items-center space-x-2 mb-2">
                       <Target className="w-5 h-5 text-neon-green" />
-                      <h3 className="font-inter font-semibold text-white">Confidence Score</h3>
+                      <h3 className="font-inter font-semibold text-foreground">Confidence Score</h3>
                     </div>
                     <div className="space-y-2">
                       <div className="text-2xl font-jetbrains font-bold text-neon-green">
@@ -207,9 +207,9 @@ export default function MLPredictionPanel() {
                   <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg p-4 border border-bright-pink/50">
                     <div className="flex items-center space-x-2 mb-2">
                       <Brain className="w-5 h-5 text-bright-pink" />
-                      <h3 className="font-inter font-semibold text-white">Analysis Factors</h3>
+                      <h3 className="font-inter font-semibold text-foreground">Analysis Factors</h3>
                     </div>
-                    <div className="text-lg font-jetbrains font-bold text-white mb-2">
+                    <div className="text-lg font-jetbrains font-bold text-foreground mb-2">
                       {prediction.analysisFactors?.length || 0} Key Factors
                     </div>
                     <div className="text-xs text-light-grey">
@@ -220,13 +220,13 @@ export default function MLPredictionPanel() {
 
                 {/* Analysis Factors */}
                 <div>
-                  <h3 className="text-lg font-inter font-semibold text-white mb-3">Key Analysis Factors</h3>
+                  <h3 className="text-lg font-inter font-semibold text-foreground mb-3">Key Analysis Factors</h3>
                   <div className="flex flex-wrap gap-2">
                     {(prediction.analysisFactors || []).map((factor: string, index: number) => (
                       <Badge 
                         key={index} 
                         variant="secondary" 
-                        className="bg-slate-800/50 text-white border-slate-600/50 hover:bg-slate-700/50"
+                        className="bg-slate-800/50 text-foreground border-slate-600/50 hover:bg-slate-700/50"
                       >
                         {factor}
                       </Badge>
@@ -237,14 +237,14 @@ export default function MLPredictionPanel() {
                 {/* Trend Analysis */}
                 {prediction.trendData && (
                   <div>
-                    <h3 className="text-lg font-inter font-semibold text-white mb-3">Trend Analysis</h3>
+                    <h3 className="text-lg font-inter font-semibold text-foreground mb-3">Trend Analysis</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                       {Object.entries(parseTrendData(prediction.trendData)).map(([key, value]) => (
                         <div key={key} className="bg-slate-800/50 rounded-lg p-3 border border-slate-600/50">
                           <div className="text-sm text-light-grey mb-1 capitalize">
                             {key.replace(/([A-Z])/g, ' $1').trim()}
                           </div>
-                          <div className="text-lg font-jetbrains font-bold text-white">
+                          <div className="text-lg font-jetbrains font-bold text-foreground">
                             {typeof value === 'number' ? `${(value * 100).toFixed(1)}%` : String(value)}
                           </div>
                         </div>
@@ -258,14 +258,14 @@ export default function MLPredictionPanel() {
                   <Button
                     variant="outline"
                     onClick={() => setShowAnalysis(!showAnalysis)}
-                    className="mb-3 border-slate-600/50 text-white hover:bg-slate-800/50 hover:text-white"
+                    className="mb-3 border-slate-600/50 text-foreground hover:bg-slate-800/50 hover:text-foreground"
                   >
                     {showAnalysis ? 'Hide' : 'Show'} Detailed Analysis
                   </Button>
                   
                   {showAnalysis && (
                     <div className="bg-slate-800/30 rounded-lg p-6 border border-slate-600/30">
-                      <div className="text-sm text-white leading-relaxed whitespace-pre-wrap font-inter">
+                      <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap font-inter">
                         {prediction.rawAnalysis}
                       </div>
                     </div>
@@ -276,7 +276,7 @@ export default function MLPredictionPanel() {
           })() : (
             <div className="text-center py-8">
               <Brain className="w-12 h-12 mx-auto text-bright-pink mb-4" />
-              <h3 className="text-lg font-inter font-semibold text-white mb-2">
+              <h3 className="text-lg font-inter font-semibold text-foreground mb-2">
                 No ML Predictions Available
               </h3>
               <p className="text-light-grey/70 mb-4">

@@ -33,12 +33,12 @@ class ErrorBoundary extends Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-dark-space flex items-center justify-center p-4">
+        <div className="min-h-screen bg-background flex items-center justify-center p-4">
           <div className="max-w-md text-center">
-            <h1 className="text-2xl font-orbitron font-bold text-white mb-4">
+            <h1 className="text-2xl font-orbitron font-bold text-foreground mb-4">
               Something went wrong
             </h1>
-            <p className="text-light-grey mb-4">
+            <p className="text-muted-foreground mb-4">
               We're sorry, but something unexpected happened. Please refresh the page to try again.
             </p>
             <button

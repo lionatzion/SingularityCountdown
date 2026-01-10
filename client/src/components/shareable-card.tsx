@@ -93,7 +93,7 @@ export default function ShareableCard() {
           <div className="flex items-center space-x-3">
             <Share2 className="w-6 h-6 text-bright-pink" />
             <div>
-              <CardTitle className="text-xl font-orbitron text-white dark:text-white">
+              <CardTitle className="text-xl font-orbitron text-foreground">
                 Share Your Prediction
               </CardTitle>
               <CardDescription className="text-muted-foreground">

@@ -321,21 +321,21 @@ export default function AIModels() {
   };
 
   return (
-    <div className="min-h-screen bg-dark-space text-light-grey">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="border-b border-gray-800 bg-dark-space/95 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-tech-purple to-bright-pink rounded-lg flex items-center justify-center">
                 <Brain className="w-4 h-4 text-white" />
               </div>
-              <h1 className="text-xl font-orbitron font-bold text-white">AI Frontier Models</h1>
+              <h1 className="text-xl font-orbitron font-bold text-foreground">AI Frontier Models</h1>
             </div>
             <div className="flex items-center space-x-4">
               <Button 
                 variant="outline" 
-                className="border-slate-600/50 text-white hover:bg-slate-800/50"
+                className="border-border text-foreground hover:bg-muted"
                 onClick={() => setLocation("/")}
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
@@ -362,17 +362,17 @@ export default function AIModels() {
 
           <TabsContent value="models" className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-orbitron font-bold text-white mb-4">
+              <h2 className="text-3xl font-orbitron font-bold text-foreground mb-4">
                 AI Frontier Models Overview
               </h2>
-              <p className="text-lg text-light-grey/80 max-w-3xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
                 Tracking the most advanced AI models and their proximity to artificial general intelligence
               </p>
             </div>
 
             {modelsLoading && (
               <div className="text-center py-8">
-                <div className="text-white">Loading frontier models...</div>
+                <div className="text-foreground">Loading frontier models...</div>
               </div>
             )}
 
@@ -388,7 +388,7 @@ export default function AIModels() {
                 <Card key={index} className="bg-slate-900/50 border-slate-700/50 p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-xl font-inter font-bold text-white">{model.name}</h3>
+                      <h3 className="text-xl font-inter font-bold text-foreground">{model.name}</h3>
                       <p className="text-sm text-light-grey/70">{model.company}</p>
                       <p className="text-xs text-light-grey/50">{model.releaseDate}</p>
                     </div>
@@ -403,7 +403,7 @@ export default function AIModels() {
 
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-white">Singularity Proximity</span>
+                      <span className="text-sm font-medium text-foreground">Singularity Proximity</span>
                       <span className={`text-sm font-bold ${getSingularityColor(model.singularityProximity)}`}>
                         {model.singularityProximity}%
                       </span>
@@ -418,7 +418,7 @@ export default function AIModels() {
                     {Object.entries(model.benchmarkScores).map(([key, value]) => (
                       <div key={key}>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-white capitalize">{key}</span>
+                          <span className="text-foreground capitalize">{key}</span>
                           <span className="text-bright-pink">{value as number}%</span>
                         </div>
                         <Progress value={value as number} className="h-1 bg-slate-700" />
@@ -443,13 +443,13 @@ export default function AIModels() {
                         {model.pricing.inputPrice && (
                           <div>
                             <span className="text-light-grey/70">Input:</span>
-                            <span className="text-white ml-1">${model.pricing.inputPrice.toFixed(3)}/1K</span>
+                            <span className="text-foreground ml-1">${model.pricing.inputPrice.toFixed(3)}/1K</span>
                           </div>
                         )}
                         {model.pricing.outputPrice && (
                           <div>
                             <span className="text-light-grey/70">Output:</span>
-                            <span className="text-white ml-1">${model.pricing.outputPrice.toFixed(3)}/1K</span>
+                            <span className="text-foreground ml-1">${model.pricing.outputPrice.toFixed(3)}/1K</span>
                           </div>
                         )}
                       </div>
@@ -479,10 +479,10 @@ export default function AIModels() {
 
           <TabsContent value="evals" className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-orbitron font-bold text-white mb-4">
+              <h2 className="text-3xl font-orbitron font-bold text-foreground mb-4">
                 Micro Evaluations
               </h2>
-              <p className="text-lg text-light-grey/80 max-w-3xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
                 Specialized tests that measure specific AI capabilities and limitations
               </p>
             </div>
@@ -492,7 +492,7 @@ export default function AIModels() {
                 <Card key={index} className="bg-slate-900/50 border-slate-700/50 p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-lg font-inter font-bold text-white">{eval_.name}</h3>
+                      <h3 className="text-lg font-inter font-bold text-foreground">{eval_.name}</h3>
                       <Badge className={getDifficultyColor(eval_.difficulty)}>
                         {eval_.difficulty}
                       </Badge>
@@ -507,7 +507,7 @@ export default function AIModels() {
                   </p>
 
                   <div>
-                    <p className="text-sm font-medium text-white mb-2">Passing Models:</p>
+                    <p className="text-sm font-medium text-foreground mb-2">Passing Models:</p>
                     <div className="flex flex-wrap gap-2">
                       {eval_.passingModels.map((model, i) => (
                         <Badge key={i} className="bg-green-500/20 text-green-400">
@@ -524,16 +524,16 @@ export default function AIModels() {
 
           <TabsContent value="mcp" className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-orbitron font-bold text-white mb-4">
+              <h2 className="text-3xl font-orbitron font-bold text-foreground mb-4">
                 MCP Server Integration
               </h2>
-              <p className="text-lg text-light-grey/80 max-w-3xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
                 Model Context Protocol servers that extend AI capabilities with external integrations
               </p>
             </div>
 
             <div className="bg-slate-900/30 border border-slate-700/50 rounded-lg p-6 mb-8">
-              <h3 className="text-lg font-inter font-bold text-white mb-3">
+              <h3 className="text-lg font-inter font-bold text-foreground mb-3">
                 <Server className="w-5 h-5 inline mr-2" />
                 Getting Started with MCP
               </h3>
@@ -550,7 +550,7 @@ export default function AIModels() {
                 <Card key={index} className="bg-slate-900/50 border-slate-700/50 p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-lg font-inter font-bold text-white">{server.name}</h3>
+                      <h3 className="text-lg font-inter font-bold text-foreground">{server.name}</h3>
                       <Badge className={getDifficultyColor(server.difficulty)}>
                         {server.difficulty}
                       </Badge>
@@ -566,21 +566,21 @@ export default function AIModels() {
 
                   <div className="space-y-4">
                     <div>
-                      <p className="text-sm font-medium text-white mb-2">Install Command:</p>
+                      <p className="text-sm font-medium text-foreground mb-2">Install Command:</p>
                       <code className="text-xs bg-slate-800 p-2 rounded block text-tech-purple">
                         {server.installCommand}
                       </code>
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-white mb-2">Configuration:</p>
+                      <p className="text-sm font-medium text-foreground mb-2">Configuration:</p>
                       <pre className="text-xs bg-slate-800 p-2 rounded text-light-grey/80 overflow-x-auto">
                         {server.configExample}
                       </pre>
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-white mb-1">Use Case:</p>
+                      <p className="text-sm font-medium text-foreground mb-1">Use Case:</p>
                       <p className="text-sm text-light-grey/70">{server.useCase}</p>
                     </div>
                   </div>

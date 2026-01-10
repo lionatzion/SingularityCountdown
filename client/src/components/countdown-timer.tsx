@@ -106,7 +106,7 @@ export default function CountdownTimer() {
         </div>
 
         <div className="text-center">
-          <p className="text-2xl font-jetbrains text-white mb-2" data-testid="text-predicted-date">{formatDate(targetDate)}</p>
+          <p className="text-2xl font-jetbrains text-foreground mb-2" data-testid="text-predicted-date">{formatDate(targetDate)}</p>
           <p className="text-sm text-light-grey/60">Based on current GPU performance and AI advancement trends</p>
         </div>
       </div>

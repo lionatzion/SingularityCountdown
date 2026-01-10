@@ -110,7 +110,7 @@ export default function CommunityPredictions() {
             <div className="flex items-center space-x-3">
               <Users className="w-6 h-6 text-tech-purple" />
               <div>
-                <CardTitle className="text-xl font-orbitron text-white dark:text-white">
+                <CardTitle className="text-xl font-orbitron text-foreground">
                   Community Predictions
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">

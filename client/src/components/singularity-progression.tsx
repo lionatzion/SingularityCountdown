@@ -376,10 +376,10 @@ export default function SingularityProgression() {
     <section className="mb-12">
       <div className="bg-slate-900/50 border border-tech-purple/30 rounded-2xl p-8 backdrop-blur-sm">
         <div className="text-center mb-6">
-          <h3 className="text-2xl font-orbitron font-bold text-white mb-2">
+          <h3 className="text-2xl font-orbitron font-bold text-foreground mb-2">
             Interactive Singularity Timeline
           </h3>
-          <p className="text-sm text-light-grey mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
             {periodData.description}
           </p>
           
@@ -412,7 +412,7 @@ export default function SingularityProgression() {
           {/* Hover Information Overlay */}
           {hoveredPoint && (
             <div className="absolute top-4 right-4 bg-slate-800/90 border border-tech-purple/50 rounded-lg p-4 backdrop-blur-sm">
-              <div className="text-sm font-jetbrains font-bold text-white mb-1">
+              <div className="text-sm font-jetbrains font-bold text-foreground mb-1">
                 Year {hoveredPoint.year}
               </div>
               <div className="text-xs text-light-grey mb-1">
@@ -448,7 +448,7 @@ export default function SingularityProgression() {
         {/* Growth Phase Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
           <div className="bg-slate-800/30 rounded-lg p-4 border border-tech-purple/30">
-            <div className="text-xl font-jetbrains font-bold text-white mb-1">
+            <div className="text-xl font-jetbrains font-bold text-foreground mb-1">
               {new Date().getFullYear()}
             </div>
             <div className="text-xs text-light-grey uppercase tracking-wide mb-2">Current Year</div>
@@ -475,7 +475,7 @@ export default function SingularityProgression() {
         {/* Growth Rate Indicator */}
         <div className="mt-6 text-center">
           <div className="text-sm text-light-grey/70 mb-2">
-            Selected Period: <span className="text-white font-semibold">{periodData.highlight}</span>
+            Selected Period: <span className="text-foreground font-semibold">{periodData.highlight}</span>
           </div>
           <div className="text-xs text-tech-purple">
             Hover timeline points for detailed projections • Logarithmic scale shows exponential growth

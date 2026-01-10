@@ -32,7 +32,7 @@ export default function MetricsGrid() {
       {/* Computing Power Card */}
       <div className="bg-slate-900/50 border border-neon-green/30 rounded-xl p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-inter font-semibold text-white">Computing Power</h3>
+          <h3 className="text-lg font-inter font-semibold text-foreground">Computing Power</h3>
           <div className="w-3 h-3 bg-neon-green rounded-full animate-pulse"></div>
         </div>
         <div className="mb-4">
@@ -47,11 +47,11 @@ export default function MetricsGrid() {
       {/* GPU Performance Card */}
       <div className="bg-slate-900/50 border border-tech-purple/30 rounded-xl p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-inter font-semibold text-white">GPU Performance</h3>
+          <h3 className="text-lg font-inter font-semibold text-foreground">GPU Performance</h3>
           <div className="w-3 h-3 bg-tech-purple rounded-full animate-pulse"></div>
         </div>
         <div className="mb-4">
-          <div className="text-3xl font-jetbrains font-bold text-white">
+          <div className="text-3xl font-jetbrains font-bold text-foreground">
             {currentMetrics.gpuPerformance.toLocaleString()}
           </div>
           <div className="text-sm text-light-grey">Benchmark Score</div>
@@ -87,16 +87,16 @@ export default function MetricsGrid() {
       {/* AI Intelligence Card */}
       <div className="bg-slate-900/50 border border-bright-pink/30 rounded-xl p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-inter font-semibold text-white">AI vs Human Intelligence</h3>
+          <h3 className="text-lg font-inter font-semibold text-foreground">AI vs Human Intelligence</h3>
           <div className="w-3 h-3 bg-bright-pink rounded-full animate-pulse"></div>
         </div>
         <div className="mb-4">
-          <div className="text-3xl font-jetbrains font-bold text-white">0.847</div>
+          <div className="text-3xl font-jetbrains font-bold text-foreground">0.847</div>
           <div className="text-sm text-light-grey">AI/Human Ratio</div>
         </div>
         <div className="space-y-3 mb-4">
           <div>
-            <div className="flex justify-between text-sm mb-1 text-white">
+            <div className="flex justify-between text-sm mb-1 text-foreground">
               <span>Reasoning</span>
               <span className="text-bright-pink">92%</span>
             </div>
@@ -105,7 +105,7 @@ export default function MetricsGrid() {
             </div>
           </div>
           <div>
-            <div className="flex justify-between text-sm mb-1 text-white">
+            <div className="flex justify-between text-sm mb-1 text-foreground">
               <span>Creativity</span>
               <span className="text-bright-pink">67%</span>
             </div>
@@ -114,7 +114,7 @@ export default function MetricsGrid() {
             </div>
           </div>
           <div>
-            <div className="flex justify-between text-sm mb-1 text-white">
+            <div className="flex justify-between text-sm mb-1 text-foreground">
               <span>Learning</span>
               <span className="text-bright-pink">89%</span>
             </div>

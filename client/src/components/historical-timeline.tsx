@@ -172,7 +172,7 @@ export default function HistoricalTimeline() {
           <div className="flex items-center space-x-3">
             <Clock className="w-6 h-6 text-tech-purple" />
             <div>
-              <CardTitle className="text-xl font-orbitron text-white dark:text-white">
+              <CardTitle className="text-xl font-orbitron text-foreground">
                 AI Milestones Timeline
               </CardTitle>
               <CardDescription className="text-muted-foreground">

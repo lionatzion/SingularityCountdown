@@ -73,19 +73,19 @@ export default function Dashboard() {
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-transparent text-xl font-orbitron font-bold text-white data-[state=open]:bg-transparent">
+                    <NavigationMenuTrigger className="bg-transparent hover:bg-transparent text-xl font-orbitron font-bold text-foreground data-[state=open]:bg-transparent">
                       Singularity Predictor
                       <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <div className="grid gap-3 p-4 w-[400px] bg-dark-space border border-gray-800">
+                      <div className="grid gap-3 p-4 w-[400px] bg-card border border-border">
                         <NavigationMenuLink asChild>
                           <a
                             href="/ai-models"
-                            className="block select-none space-y-1 rounded-md p-3 leading-none outline-none transition-colors hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none outline-none transition-colors hover:bg-muted hover:text-foreground focus:bg-muted focus:text-foreground"
                           >
-                            <div className="text-sm font-orbitron font-medium leading-none text-white whitespace-nowrap">AI Models</div>
-                            <p className="text-xs leading-snug text-light-grey/70 font-orbitron whitespace-nowrap">
+                            <div className="text-sm font-orbitron font-medium leading-none text-foreground whitespace-nowrap">AI Models</div>
+                            <p className="text-xs leading-snug text-muted-foreground font-orbitron whitespace-nowrap">
                               Explore frontier AI models and their capabilities
                             </p>
                           </a>
@@ -111,10 +111,10 @@ export default function Dashboard() {
         {/* Hero Section */}
         <section className="mb-12">
           <div className="text-center mb-8">
-            <h2 className="text-4xl md:text-6xl font-orbitron font-bold text-white mb-4">
+            <h2 className="text-4xl md:text-6xl font-orbitron font-bold text-foreground mb-4">
               Technological Singularity
             </h2>
-            <p className="text-lg text-light-grey/80 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Predicting the convergence point where artificial intelligence exceeds human cognitive capabilities
             </p>
           </div>
@@ -161,7 +161,7 @@ export default function Dashboard() {
       <footer className="mt-16 py-8 border-t border-slate-700/50">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-sm text-light-grey/70">
+            <div className="text-sm text-muted-foreground">
               © 2025 RS Commercial Services, Inc. All rights reserved.
             </div>
             <div className="text-sm">
