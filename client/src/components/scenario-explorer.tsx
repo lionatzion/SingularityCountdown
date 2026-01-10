@@ -120,7 +120,7 @@ export default function ScenarioExplorer() {
             <div className="flex items-center space-x-3">
               <Sliders className="w-6 h-6 text-neon-green" />
               <div>
-                <CardTitle className="text-xl font-orbitron text-white dark:text-white">
+                <CardTitle className="text-xl font-orbitron text-foreground">
                   What If? Scenario Explorer
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
@@ -145,7 +145,7 @@ export default function ScenarioExplorer() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               {sliderConfigs.map(config => (
-                <div key={config.key} className="space-y-3 p-4 rounded-lg bg-slate-800/30 dark:bg-slate-800/50 border border-slate-700/50">
+                <div key={config.key} className="space-y-3 p-4 rounded-lg bg-slate-100 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700/50">
                   <div className="flex justify-between items-center">
                     <div>
                       <label className="text-sm font-semibold text-foreground">
@@ -176,7 +176,7 @@ export default function ScenarioExplorer() {
             
             <div className="lg:col-span-1">
               <div className="sticky top-24 space-y-4">
-                <div className="p-6 rounded-xl bg-gradient-to-br from-tech-purple/30 to-bright-pink/30 border-2 border-tech-purple/60 shadow-lg">
+                <div className="p-6 rounded-xl bg-white dark:bg-transparent bg-gradient-to-br from-tech-purple/30 to-bright-pink/25 dark:from-tech-purple/30 dark:to-bright-pink/30 border-2 border-tech-purple/80 dark:border-tech-purple/60 shadow-lg">
                   <div className="flex items-center gap-2 mb-4">
                     <Calendar className="w-5 h-5 text-bright-pink" />
                     <h3 className="font-semibold text-foreground">Predicted Date</h3>
@@ -189,7 +189,7 @@ export default function ScenarioExplorer() {
                   </p>
                 </div>
                 
-                <div className="p-6 rounded-xl bg-gradient-to-br from-neon-green/30 to-tech-purple/30 border-2 border-neon-green/60 shadow-lg">
+                <div className="p-6 rounded-xl bg-white dark:bg-transparent bg-gradient-to-br from-neon-green/30 to-tech-purple/25 dark:from-neon-green/30 dark:to-tech-purple/30 border-2 border-neon-green/80 dark:border-neon-green/60 shadow-lg">
                   <div className="flex items-center gap-2 mb-4">
                     <TrendingUp className="w-5 h-5 text-neon-green" />
                     <h3 className="font-semibold text-foreground">Confidence Score</h3>
@@ -206,7 +206,7 @@ export default function ScenarioExplorer() {
                   </p>
                 </div>
                 
-                <div className="p-4 rounded-lg bg-slate-800/40 border border-slate-600/50 shadow-sm">
+                <div className="p-4 rounded-lg bg-slate-100 dark:bg-slate-800/40 border border-slate-300 dark:border-slate-600/50 shadow-sm">
                   <p className="text-xs text-muted-foreground">
                     This interactive model demonstrates how different factors might influence AI development timelines. 
                     Extreme settings reduce prediction confidence as they represent less likely scenarios.
