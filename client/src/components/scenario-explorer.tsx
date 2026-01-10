@@ -132,7 +132,7 @@ export default function ScenarioExplorer() {
               variant="outline"
               size="sm"
               onClick={resetToDefaults}
-              className="border-tech-purple/50 text-tech-purple hover:bg-tech-purple/20"
+              className="bg-tech-purple text-white border-tech-purple hover:bg-tech-purple/80 shadow-md"
               data-testid="reset-scenario-button"
             >
               <RotateCcw className="w-4 h-4 mr-2" />
@@ -145,20 +145,20 @@ export default function ScenarioExplorer() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               {sliderConfigs.map(config => (
-                <div key={config.key} className="space-y-3">
+                <div key={config.key} className="space-y-3 p-4 rounded-lg bg-slate-800/30 dark:bg-slate-800/50 border border-slate-700/50">
                   <div className="flex justify-between items-center">
                     <div>
-                      <label className="text-sm font-medium text-foreground">
+                      <label className="text-sm font-semibold text-foreground">
                         {config.label}
                       </label>
                       <p className="text-xs text-muted-foreground">{config.description}</p>
                     </div>
-                    <Badge variant="outline" className="bg-tech-purple/20 text-tech-purple border-tech-purple/50 font-jetbrains">
+                    <Badge className="bg-tech-purple text-white border-tech-purple font-jetbrains shadow-md px-3 py-1">
                       {params[config.key]}%
                     </Badge>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-xs text-muted-foreground w-20">{config.lowLabel}</span>
+                    <span className="text-xs font-medium text-foreground/70 w-20">{config.lowLabel}</span>
                     <Slider
                       value={[params[config.key]]}
                       onValueChange={(value) => handleSliderChange(config.key, value)}
@@ -168,7 +168,7 @@ export default function ScenarioExplorer() {
                       className="flex-1"
                       data-testid={`slider-${config.key}`}
                     />
-                    <span className="text-xs text-muted-foreground w-20 text-right">{config.highLabel}</span>
+                    <span className="text-xs font-medium text-foreground/70 w-20 text-right">{config.highLabel}</span>
                   </div>
                 </div>
               ))}
@@ -176,7 +176,7 @@ export default function ScenarioExplorer() {
             
             <div className="lg:col-span-1">
               <div className="sticky top-24 space-y-4">
-                <div className="p-6 rounded-xl bg-gradient-to-br from-tech-purple/20 to-bright-pink/20 border border-tech-purple/30">
+                <div className="p-6 rounded-xl bg-gradient-to-br from-tech-purple/30 to-bright-pink/30 border-2 border-tech-purple/60 shadow-lg">
                   <div className="flex items-center gap-2 mb-4">
                     <Calendar className="w-5 h-5 text-bright-pink" />
                     <h3 className="font-semibold text-foreground">Predicted Date</h3>
@@ -189,7 +189,7 @@ export default function ScenarioExplorer() {
                   </p>
                 </div>
                 
-                <div className="p-6 rounded-xl bg-gradient-to-br from-neon-green/20 to-tech-purple/20 border border-neon-green/30">
+                <div className="p-6 rounded-xl bg-gradient-to-br from-neon-green/30 to-tech-purple/30 border-2 border-neon-green/60 shadow-lg">
                   <div className="flex items-center gap-2 mb-4">
                     <TrendingUp className="w-5 h-5 text-neon-green" />
                     <h3 className="font-semibold text-foreground">Confidence Score</h3>
@@ -206,7 +206,7 @@ export default function ScenarioExplorer() {
                   </p>
                 </div>
                 
-                <div className="p-4 rounded-lg bg-card/50 border border-border">
+                <div className="p-4 rounded-lg bg-slate-800/40 border border-slate-600/50 shadow-sm">
                   <p className="text-xs text-muted-foreground">
                     This interactive model demonstrates how different factors might influence AI development timelines. 
                     Extreme settings reduce prediction confidence as they represent less likely scenarios.
