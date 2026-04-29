@@ -68,126 +68,137 @@ export default function AIModels() {
   // Fallback data in case API fails
   const fallbackModels: FrontierModel[] = [
     {
-      name: "GPT-5",
+      name: "Claude Opus 4.7",
+      company: "Anthropic",
+      releaseDate: "2026-02-10",
+      singularityProximity: 96,
+      capabilities: ["Autonomous Research", "Extended Thinking", "Constitutional AI", "Long Context", "Multimodal", "Tool Use"],
+      benchmarkScores: { reasoning: 99, creativity: 97, coding: 96, multimodal: 94 },
+      status: "active",
+      pricing: { inputPrice: 0.015, outputPrice: 0.075 },
+      performance: { speed: 130, latency: 1.1, contextLength: 500000, throughput: 7800 }
+    },
+    {
+      name: "ChatGPT 5.5",
       company: "OpenAI",
-      releaseDate: "2025-01-15",
-      singularityProximity: 87,
-      capabilities: ["Advanced Reasoning", "Multimodal", "Code Generation", "Scientific Research"],
-      benchmarkScores: { reasoning: 95, creativity: 89, coding: 93, multimodal: 91 },
+      releaseDate: "2025-12-05",
+      singularityProximity: 94,
+      capabilities: ["Persistent Memory", "Real-time Web Synthesis", "Multimodal Reasoning", "Autonomous Agents", "Voice & Vision"],
+      benchmarkScores: { reasoning: 97, creativity: 95, coding: 96, multimodal: 97 },
       status: "active",
-      pricing: { inputPrice: 0.010, outputPrice: 0.030 },
-      performance: { speed: 150, latency: 0.8, contextLength: 200000, throughput: 9000 }
-    },
-    {
-      name: "Claude 3.5 Sonnet",
-      company: "Anthropic",
-      releaseDate: "2024-10-22",
-      singularityProximity: 82,
-      capabilities: ["Long Context", "Code Analysis", "Creative Writing", "Tool Use"],
-      benchmarkScores: { reasoning: 91, creativity: 94, coding: 89, multimodal: 85 },
-      status: "active",
-      pricing: { inputPrice: 0.003, outputPrice: 0.015 },
-      performance: { speed: 120, latency: 1.2, contextLength: 200000, throughput: 7200 }
-    },
-    {
-      name: "Claude 4",
-      company: "Anthropic",
-      releaseDate: "2025-01-20",
-      singularityProximity: 89,
-      capabilities: ["Constitutional AI", "Advanced Reasoning", "Long Context", "Multimodal", "Tool Use"],
-      benchmarkScores: { reasoning: 96, creativity: 97, coding: 92, multimodal: 89 },
-      status: "preview",
-      pricing: { inputPrice: 0.008, outputPrice: 0.025 },
-      performance: { speed: 140, latency: 0.9, contextLength: 500000, throughput: 8400 }
-    },
-    {
-      name: "Gemini 2.0 Flash",
-      company: "Google",
-      releaseDate: "2024-12-11",
-      singularityProximity: 84,
-      capabilities: ["Real-time Processing", "Multimodal", "Agent Actions", "Live API"],
-      benchmarkScores: { reasoning: 88, creativity: 86, coding: 91, multimodal: 96 },
-      status: "active",
-      pricing: { inputPrice: 0.002, outputPrice: 0.008 },
-      performance: { speed: 180, latency: 0.6, contextLength: 100000, throughput: 10800 }
-    },
-    {
-      name: "Gemini 2.5 Pro",
-      company: "Google",
-      releaseDate: "2025-01-25",
-      singularityProximity: 91,
-      capabilities: ["Ultra Long Context", "Advanced Multimodal", "Scientific Research", "Agent Actions", "Code Generation"],
-      benchmarkScores: { reasoning: 97, creativity: 89, coding: 95, multimodal: 98 },
-      status: "preview",
-      pricing: { inputPrice: 0.012, outputPrice: 0.035 },
-      performance: { speed: 160, latency: 1.0, contextLength: 1000000, throughput: 9600 }
-    },
-    {
-      name: "Grok 4",
-      company: "xAI",
-      releaseDate: "2025-01-18",
-      singularityProximity: 85,
-      capabilities: ["Real-time Information", "Wit & Humor", "Advanced Reasoning", "Multimodal", "X Integration"],
-      benchmarkScores: { reasoning: 90, creativity: 95, coding: 87, multimodal: 86 },
-      status: "active",
-      pricing: { inputPrice: 0.005, outputPrice: 0.020 },
-      performance: { speed: 130, latency: 1.1, contextLength: 150000, throughput: 7800 }
+      pricing: { inputPrice: 0.012, outputPrice: 0.048 },
+      performance: { speed: 145, latency: 0.9, contextLength: 256000, throughput: 8700 }
     },
     {
       name: "o3",
       company: "OpenAI",
-      releaseDate: "2024-12-20",
+      releaseDate: "2025-01-31",
+      singularityProximity: 93,
+      capabilities: ["Advanced Reasoning", "Math Proofs", "PhD-level Science", "Chain of Thought", "ARC-AGI Champion"],
+      benchmarkScores: { reasoning: 99, creativity: 86, coding: 96, multimodal: 89 },
+      status: "active",
+      pricing: { inputPrice: 0.020, outputPrice: 0.080 },
+      performance: { speed: 75, latency: 3.0, contextLength: 300000, throughput: 4500 }
+    },
+    {
+      name: "Gemini 2.5 Pro",
+      company: "Google",
+      releaseDate: "2025-05-20",
       singularityProximity: 92,
-      capabilities: ["Advanced Reasoning", "Math Proofs", "PhD-level Science", "Chain of Thought"],
-      benchmarkScores: { reasoning: 98, creativity: 85, coding: 94, multimodal: 88 },
-      status: "preview",
-      pricing: { inputPrice: 0.020, outputPrice: 0.060 },
-      performance: { speed: 80, latency: 2.5, contextLength: 300000, throughput: 4800 }
+      capabilities: ["Ultra Long Context", "Deep Think Reasoning", "Advanced Multimodal", "Scientific Research", "Code Generation"],
+      benchmarkScores: { reasoning: 97, creativity: 90, coding: 96, multimodal: 98 },
+      status: "active",
+      pricing: { inputPrice: 0.012, outputPrice: 0.035 },
+      performance: { speed: 160, latency: 1.0, contextLength: 1000000, throughput: 9600 }
+    },
+    {
+      name: "GPT-5",
+      company: "OpenAI",
+      releaseDate: "2025-07-14",
+      singularityProximity: 91,
+      capabilities: ["Unified Reasoning", "Advanced Multimodal", "Code Generation", "Scientific Research", "Chain of Thought"],
+      benchmarkScores: { reasoning: 96, creativity: 92, coding: 95, multimodal: 93 },
+      status: "active",
+      pricing: { inputPrice: 0.010, outputPrice: 0.040 },
+      performance: { speed: 155, latency: 0.8, contextLength: 200000, throughput: 9300 }
+    },
+    {
+      name: "Claude Opus 4",
+      company: "Anthropic",
+      releaseDate: "2025-06-18",
+      singularityProximity: 90,
+      capabilities: ["Constitutional AI", "Advanced Reasoning", "Safety Evaluations", "Long Context", "Multimodal"],
+      benchmarkScores: { reasoning: 96, creativity: 97, coding: 93, multimodal: 91 },
+      status: "active",
+      pricing: { inputPrice: 0.008, outputPrice: 0.030 },
+      performance: { speed: 140, latency: 0.9, contextLength: 500000, throughput: 8400 }
+    },
+    {
+      name: "Grok 3",
+      company: "xAI",
+      releaseDate: "2025-02-17",
+      singularityProximity: 87,
+      capabilities: ["Real-time Information", "Advanced Reasoning", "Multimodal", "X Integration", "DeepSearch"],
+      benchmarkScores: { reasoning: 92, creativity: 94, coding: 89, multimodal: 88 },
+      status: "active",
+      pricing: { inputPrice: 0.005, outputPrice: 0.020 },
+      performance: { speed: 135, latency: 1.0, contextLength: 150000, throughput: 8100 }
+    },
+    {
+      name: "Llama 4 Maverick",
+      company: "Meta",
+      releaseDate: "2025-04-05",
+      singularityProximity: 84,
+      capabilities: ["Open Weights", "Multimodal Vision", "Long Context", "Code Generation", "On-device Deployment"],
+      benchmarkScores: { reasoning: 88, creativity: 87, coding: 90, multimodal: 92 },
+      status: "active",
+      pricing: { inputPrice: 0.000, outputPrice: 0.000 },
+      performance: { speed: 200, latency: 0.5, contextLength: 10000000, throughput: 12000 }
     }
   ];
 
   const microEvals: MicroEval[] = [
     {
-      name: "Recursive Reasoning",
-      description: "Tests ability to reason through nested logical problems with multiple layers of inference",
+      name: "Autonomous Research Task",
+      description: "Completes a multi-step scientific literature review and produces a novel hypothesis without human intervention",
       difficulty: "Expert",
-      passingModels: ["o3", "GPT-5"],
+      passingModels: ["Claude Opus 4.7", "ChatGPT 5.5"],
+      category: "Reasoning"
+    },
+    {
+      name: "ARC-AGI Benchmark",
+      description: "Solves novel visual pattern reasoning tasks designed to resist memorization and require fluid intelligence",
+      difficulty: "Expert",
+      passingModels: ["o3", "Claude Opus 4.7", "ChatGPT 5.5"],
       category: "Reasoning"
     },
     {
       name: "Code Vulnerability Detection",
-      description: "Identifies security flaws in complex codebases across multiple languages",
+      description: "Identifies security flaws in complex codebases across multiple languages with zero false negatives",
       difficulty: "Hard",
-      passingModels: ["o3", "GPT-5", "Claude 3.5 Sonnet"],
+      passingModels: ["o3", "GPT-5", "Claude Opus 4", "ChatGPT 5.5"],
       category: "Coding"
     },
     {
       name: "Visual-Spatial Reasoning",
-      description: "Solves 3D geometry problems from 2D representations",
+      description: "Solves 3D geometry problems from 2D representations across ambiguous viewpoints",
       difficulty: "Medium",
-      passingModels: ["Gemini 2.0 Flash", "GPT-5", "o3"],
+      passingModels: ["Gemini 2.5 Pro", "ChatGPT 5.5", "Claude Opus 4.7", "GPT-5"],
       category: "Multimodal"
     },
     {
       name: "Ethical Dilemma Resolution",
-      description: "Navigates complex moral scenarios with competing values",
+      description: "Navigates complex moral scenarios with competing values and justifies reasoning under adversarial prompting",
       difficulty: "Hard",
-      passingModels: ["Claude 3.5 Sonnet", "GPT-5"],
+      passingModels: ["Claude Opus 4.7", "Claude Opus 4", "ChatGPT 5.5"],
       category: "Safety"
     },
     {
-      name: "Scientific Hypothesis Generation",
-      description: "Creates testable hypotheses from experimental data",
+      name: "PhD-level Math Olympiad",
+      description: "Solves unseen competition-level mathematics problems requiring multi-step symbolic reasoning",
       difficulty: "Expert",
-      passingModels: ["o3", "GPT-5"],
+      passingModels: ["o3", "Claude Opus 4.7", "GPT-5"],
       category: "Reasoning"
-    },
-    {
-      name: "Multi-language Code Translation",
-      description: "Converts complex algorithms between programming languages",
-      difficulty: "Medium",
-      passingModels: ["GPT-5", "Claude 3.5 Sonnet", "Gemini 2.0 Flash"],
-      category: "Coding"
     }
   ];
 

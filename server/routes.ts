@@ -280,59 +280,92 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
         // Return fallback data if API key is not configured
         const fallbackModels = [
           {
+            name: "Claude Opus 4.7",
+            company: "Anthropic",
+            releaseDate: "2026-02-10",
+            singularityProximity: 96,
+            capabilities: ["Autonomous Research", "Extended Thinking", "Constitutional AI", "Long Context", "Multimodal", "Tool Use"],
+            benchmarkScores: { reasoning: 99, creativity: 97, coding: 96, multimodal: 94 },
+            status: "active",
+            pricing: { inputPrice: 0.015, outputPrice: 0.075 },
+            performance: { speed: 130, latency: 1.1, contextLength: 500000, throughput: 7800 }
+          },
+          {
+            name: "ChatGPT 5.5",
+            company: "OpenAI",
+            releaseDate: "2025-12-05",
+            singularityProximity: 94,
+            capabilities: ["Persistent Memory", "Real-time Web Synthesis", "Multimodal Reasoning", "Autonomous Agents", "Voice & Vision"],
+            benchmarkScores: { reasoning: 97, creativity: 95, coding: 96, multimodal: 97 },
+            status: "active",
+            pricing: { inputPrice: 0.012, outputPrice: 0.048 },
+            performance: { speed: 145, latency: 0.9, contextLength: 256000, throughput: 8700 }
+          },
+          {
             name: "GPT-5",
             company: "OpenAI",
-            releaseDate: "2025-01-15",
-            singularityProximity: 87,
-            capabilities: ["Advanced Reasoning", "Multimodal", "Code Generation", "Scientific Research"],
-            benchmarkScores: { reasoning: 95, creativity: 89, coding: 93, multimodal: 91 },
+            releaseDate: "2025-07-14",
+            singularityProximity: 91,
+            capabilities: ["Unified Reasoning", "Advanced Multimodal", "Code Generation", "Scientific Research", "Chain of Thought"],
+            benchmarkScores: { reasoning: 96, creativity: 92, coding: 95, multimodal: 93 },
             status: "active",
-            pricing: { inputPrice: 0.010, outputPrice: 0.030 },
-            performance: { speed: 150, latency: 0.8, contextLength: 200000, throughput: 9000 }
+            pricing: { inputPrice: 0.010, outputPrice: 0.040 },
+            performance: { speed: 155, latency: 0.8, contextLength: 200000, throughput: 9300 }
           },
           {
-            name: "Claude 3.5 Sonnet",
+            name: "Claude Opus 4",
             company: "Anthropic",
-            releaseDate: "2024-10-22",
-            singularityProximity: 82,
-            capabilities: ["Long Context", "Code Analysis", "Creative Writing", "Tool Use"],
-            benchmarkScores: { reasoning: 91, creativity: 94, coding: 89, multimodal: 85 },
+            releaseDate: "2025-06-18",
+            singularityProximity: 90,
+            capabilities: ["Constitutional AI", "Advanced Reasoning", "Safety Evaluations", "Long Context", "Multimodal"],
+            benchmarkScores: { reasoning: 96, creativity: 97, coding: 93, multimodal: 91 },
             status: "active",
-            pricing: { inputPrice: 0.003, outputPrice: 0.015 },
-            performance: { speed: 120, latency: 1.2, contextLength: 200000, throughput: 7200 }
-          },
-          {
-            name: "Gemini 2.0 Flash",
-            company: "Google",
-            releaseDate: "2024-12-11",
-            singularityProximity: 84,
-            capabilities: ["Real-time Processing", "Multimodal", "Agent Actions", "Live API"],
-            benchmarkScores: { reasoning: 88, creativity: 86, coding: 91, multimodal: 96 },
-            status: "active",
-            pricing: { inputPrice: 0.002, outputPrice: 0.008 },
-            performance: { speed: 180, latency: 0.6, contextLength: 100000, throughput: 10800 }
+            pricing: { inputPrice: 0.008, outputPrice: 0.030 },
+            performance: { speed: 140, latency: 0.9, contextLength: 500000, throughput: 8400 }
           },
           {
             name: "Gemini 2.5 Pro",
             company: "Google",
-            releaseDate: "2025-01-25",
-            singularityProximity: 91,
-            capabilities: ["Ultra Long Context", "Advanced Multimodal", "Scientific Research", "Agent Actions", "Code Generation"],
-            benchmarkScores: { reasoning: 97, creativity: 89, coding: 95, multimodal: 98 },
-            status: "preview",
+            releaseDate: "2025-05-20",
+            singularityProximity: 92,
+            capabilities: ["Ultra Long Context", "Deep Think Reasoning", "Advanced Multimodal", "Scientific Research", "Code Generation"],
+            benchmarkScores: { reasoning: 97, creativity: 90, coding: 96, multimodal: 98 },
+            status: "active",
             pricing: { inputPrice: 0.012, outputPrice: 0.035 },
             performance: { speed: 160, latency: 1.0, contextLength: 1000000, throughput: 9600 }
           },
           {
-            name: "Grok 4",
+            name: "o3",
+            company: "OpenAI",
+            releaseDate: "2025-01-31",
+            singularityProximity: 93,
+            capabilities: ["Advanced Reasoning", "Math Proofs", "PhD-level Science", "Chain of Thought", "ARC-AGI Champion"],
+            benchmarkScores: { reasoning: 99, creativity: 86, coding: 96, multimodal: 89 },
+            status: "active",
+            pricing: { inputPrice: 0.020, outputPrice: 0.080 },
+            performance: { speed: 75, latency: 3.0, contextLength: 300000, throughput: 4500 }
+          },
+          {
+            name: "Grok 3",
             company: "xAI",
-            releaseDate: "2025-01-18",
-            singularityProximity: 85,
-            capabilities: ["Real-time Information", "Wit & Humor", "Advanced Reasoning", "Multimodal", "X Integration"],
-            benchmarkScores: { reasoning: 90, creativity: 95, coding: 87, multimodal: 86 },
+            releaseDate: "2025-02-17",
+            singularityProximity: 87,
+            capabilities: ["Real-time Information", "Advanced Reasoning", "Multimodal", "X Integration", "DeepSearch"],
+            benchmarkScores: { reasoning: 92, creativity: 94, coding: 89, multimodal: 88 },
             status: "active",
             pricing: { inputPrice: 0.005, outputPrice: 0.020 },
-            performance: { speed: 130, latency: 1.1, contextLength: 150000, throughput: 7800 }
+            performance: { speed: 135, latency: 1.0, contextLength: 150000, throughput: 8100 }
+          },
+          {
+            name: "Llama 4 Maverick",
+            company: "Meta",
+            releaseDate: "2025-04-05",
+            singularityProximity: 84,
+            capabilities: ["Open Weights", "Multimodal Vision", "Long Context", "Code Generation", "On-device Deployment"],
+            benchmarkScores: { reasoning: 88, creativity: 87, coding: 90, multimodal: 92 },
+            status: "active",
+            pricing: { inputPrice: 0.000, outputPrice: 0.000 },
+            performance: { speed: 200, latency: 0.5, contextLength: 10000000, throughput: 12000 }
           }
         ];
 
@@ -351,14 +384,34 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
       // Return fallback data on error
       const fallbackModels = [
         {
-          name: "GPT-5",
-          company: "OpenAI", 
-          releaseDate: "2025-01-15",
-          singularityProximity: 87,
-          capabilities: ["Advanced Reasoning", "Multimodal", "Code Generation", "Scientific Research"],
-          benchmarkScores: { reasoning: 95, creativity: 89, coding: 93, multimodal: 91 },
+          name: "Claude Opus 4.7",
+          company: "Anthropic",
+          releaseDate: "2026-02-10",
+          singularityProximity: 96,
+          capabilities: ["Autonomous Research", "Extended Thinking", "Constitutional AI", "Long Context", "Multimodal"],
+          benchmarkScores: { reasoning: 99, creativity: 97, coding: 96, multimodal: 94 },
           status: "active",
-          pricing: { inputPrice: 0.010, outputPrice: 0.030 }
+          pricing: { inputPrice: 0.015, outputPrice: 0.075 }
+        },
+        {
+          name: "ChatGPT 5.5",
+          company: "OpenAI",
+          releaseDate: "2025-12-05",
+          singularityProximity: 94,
+          capabilities: ["Persistent Memory", "Real-time Web Synthesis", "Multimodal Reasoning", "Autonomous Agents"],
+          benchmarkScores: { reasoning: 97, creativity: 95, coding: 96, multimodal: 97 },
+          status: "active",
+          pricing: { inputPrice: 0.012, outputPrice: 0.048 }
+        },
+        {
+          name: "GPT-5",
+          company: "OpenAI",
+          releaseDate: "2025-07-14",
+          singularityProximity: 91,
+          capabilities: ["Unified Reasoning", "Advanced Multimodal", "Code Generation", "Scientific Research"],
+          benchmarkScores: { reasoning: 96, creativity: 92, coding: 95, multimodal: 93 },
+          status: "active",
+          pricing: { inputPrice: 0.010, outputPrice: 0.040 }
         }
       ];
 
