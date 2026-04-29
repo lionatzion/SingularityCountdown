@@ -135,10 +135,98 @@ const milestones: Milestone[] = [
   {
     year: 2025,
     month: "Jan",
-    title: "Claude 3.5 Opus",
-    description: "Anthropic releases most capable model yet with extended thinking capabilities.",
+    title: "DeepSeek R1 Shocks the World",
+    description: "Chinese lab DeepSeek releases open-source R1 reasoning model matching o1 at a fraction of the cost, triggering a global AI race reset.",
+    category: "breakthrough",
+    impact: "critical"
+  },
+  {
+    year: 2025,
+    month: "Feb",
+    title: "Grok 3 Released",
+    description: "xAI launches Grok 3, trained on 100,000 H100 GPUs, surpassing GPT-4o on major benchmarks.",
     category: "model",
     impact: "high"
+  },
+  {
+    year: 2025,
+    month: "Mar",
+    title: "Claude 3.7 Sonnet",
+    description: "Anthropic's Claude 3.7 introduces hybrid reasoning mode, switching between fast response and deep extended thinking.",
+    category: "model",
+    impact: "high"
+  },
+  {
+    year: 2025,
+    month: "Apr",
+    title: "Llama 4 Goes Multimodal",
+    description: "Meta releases Llama 4 Scout and Maverick with native vision and a 10M-token context window, open-weights.",
+    category: "model",
+    impact: "high"
+  },
+  {
+    year: 2025,
+    month: "May",
+    title: "Gemini 2.5 Pro",
+    description: "Google's Gemini 2.5 Pro tops every major benchmark and introduces Deep Think reasoning mode.",
+    category: "model",
+    impact: "critical"
+  },
+  {
+    year: 2025,
+    month: "Jun",
+    title: "Claude Opus 4",
+    description: "Anthropic releases Claude Opus 4, its first model to pass all frontier safety evaluations while setting new coding and reasoning records.",
+    category: "model",
+    impact: "critical"
+  },
+  {
+    year: 2025,
+    month: "Jul",
+    title: "GPT-5 Launches",
+    description: "OpenAI releases GPT-5, unifying o-series reasoning with general intelligence in a single model with near-human graduate-level performance.",
+    category: "breakthrough",
+    impact: "critical"
+  },
+  {
+    year: 2025,
+    month: "Sep",
+    title: "AI Agents Go Mainstream",
+    description: "Autonomous AI agents begin handling multi-day coding, legal research, and scientific literature tasks with minimal human oversight.",
+    category: "adoption",
+    impact: "critical"
+  },
+  {
+    year: 2025,
+    month: "Nov",
+    title: "NVIDIA Blackwell B200 Era",
+    description: "Blackwell GPU clusters reach exaflop-scale training runs, compressing model training timelines from months to weeks.",
+    category: "hardware",
+    impact: "high"
+  },
+  {
+    year: 2025,
+    month: "Dec",
+    title: "ChatGPT 5.5 Released",
+    description: "OpenAI's ChatGPT 5.5 introduces persistent memory, real-time web synthesis, and multimodal reasoning in a single unified interface.",
+    category: "model",
+    impact: "critical"
+  },
+  {
+    year: 2026,
+    month: "Feb",
+    title: "Claude Opus 4.7",
+    description: "Anthropic's Opus 4.7 demonstrates sustained autonomous research capability, completing novel scientific hypotheses independently validated by peer review.",
+    category: "breakthrough",
+    impact: "critical"
+  },
+  {
+    year: 2026,
+    month: "Apr",
+    title: "AGI Threshold Debated",
+    description: "Leading AI labs and researchers publicly debate whether current frontier models meet operational AGI criteria across economic tasks.",
+    category: "research",
+    impact: "critical"
   }
 ];
 
